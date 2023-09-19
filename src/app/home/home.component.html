@@ -1,0 +1,121 @@
+<div>
+  <div class="container-fluid my-3 mx-2">
+    <h1>
+      Hi, Welcome back!
+    </h1>
+    Your shopping dashboard template
+  </div>
+  <div class="container-fluid my-4  ">
+    <table class="hometable">
+      <tr>
+        <td class="bir">
+          Category
+          <hr>
+          <a routerLink="/category"> View Details</a>
+          <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
+        </td>
+        <td class="com">
+          Deals
+          <hr>
+          <a routerLink="/offer"> View Details</a>
+          <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
+        </td>
+        <td class="Qui">
+          Sell
+          <hr>
+          <a routerLink="/offer"> View Details</a>
+          <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
+        </td>
+        <td class="hol">
+          Customer Service
+          <hr>
+          <a routerLink="/users"> View Details</a>
+          <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="container-fluid my-4  ">
+    <table class="graphtable">
+      <tr>
+        <td>
+          <div class="weekend my-4 ">
+            <p class="pweek">
+              <mat-icon class="asse">assessment</mat-icon>
+              Weekly Analysis
+            </p>
+
+            <img class="weekimg" src="../../assets/weekend.png">
+
+          </div>
+        </td>
+        <td>
+          <div class="monthly my-4 ">
+            <p class="pmonthly">
+              <mat-icon class="asse">assessment</mat-icon>
+              Monthly Report
+            </p>
+            <img src="../../assets/monthly.png" class="monthlyimg">
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="emp my-4 ">
+    <div class="pemp">
+      <table width="100%">
+        <tr>
+          <td>
+            <p>
+              ACTIVE OEDERS
+            </p>
+          </td>
+          <td class="inputQuantity">
+            <div class="container-fluid">
+              <input class="form-control" type="number" [(ngModel)]=" quantity" [formControl]=" quantityFilter"
+                placeholder="Search  Quantity">
+            </div>
+          </td>
+        </tr>
+      </table>
+
+
+    </div>
+
+    <div class="container-fluid">
+      <table class="table text-center">
+        <tr>
+          <th>Order</th>
+          <th>Item Name</th>
+          <th>Quantity</th>
+          <th>Product Code</th>
+          <th>Order Date</th>
+          <th>Price</th>
+        </tr>
+        <tr *ngFor="let  order of  orderList | filter :  quantity ; let i =index">
+          <td>
+            {{ i+1 }}
+          </td>
+          <td>
+            {{ order.itemName}}
+          </td>
+          <td>
+            {{ order.quantity}}
+          </td>
+          <td>
+            {{ order.productCode}}
+          </td>
+          <td>
+            {{ order.orderDate | date : 'dd/MMM/yyyy'}}
+          </td>
+          <td>
+            {{ order.price}}
+          </td>
+        </tr>
+      </table>
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,25 @@
+
+.login{
+    background-color: black;
+    border-radius: 5px;
+    width: 35%;
+    padding: 50px;
+}
+
+.loginsvg{
+    color: white;
+    text-align: center;
+    margin: 15px
+}
+
+.logindiv{
+    color: white;
+    text-align: center;
+    font-size: 17px;
+    margin: 15px
+}
+
+.errordiv{
+    font-size: 17px;
+    padding: 9px
+}

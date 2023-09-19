@@ -1,0 +1,190 @@
+<!-- {{cancellationForm.value | json}}
+{{cancellationForm.pristine | json}}
+{{cancellationForm.dirty | json}} -->
+
+<div class="container-fluid">
+  <h1 class="my-3 mx-2 px-3 bg-light border-light rounded-2">Registration</h1>
+
+  <div class="container-fluid">
+    <form [formGroup]="registration" (ngSubmit)="onSubmit()" class="mx-3" method="post" enctype="multipart/form-data">
+      <div class="example-full-width">
+        <mat-label>Name:</mat-label>
+        <input
+          class="form-control"
+          type="text"
+          matInput
+          formControlName="name"
+          placeholder="Your Name"
+        />
+
+        <div class="mt-1">
+            <mat-error
+              *ngIf="
+                registration.get('name')?.hasError('required') &&
+                registration.get('name')?.touched
+              "
+            >
+              Name is required.
+            </mat-error>
+          </div>
+
+        <!--   {{cancellationForm.get('name')?.errors | json}}-->
+        <!-- <mat-error *ngIf="registration.get('name')?.hasError('required')">
+                     name should be provide!
+                </mat-error> -->
+      </div>
+
+      <div class="example-full-width">
+        <mat-label>Email:</mat-label>
+        <input
+          class="form-control"
+          type="email"
+          matInput
+          formControlName="email"
+          placeholder="Email"
+        />
+        <!-- <mat-error *ngIf="registration.get('name')?.errors?.['required']">
+                    Item name should be provide
+                </mat-error> -->
+        <div class="mt-1">
+          <mat-error
+            *ngIf="
+              registration.get('email')?.hasError('required') &&
+              registration.get('email')?.touched
+            "
+          >
+            Email is required.
+          </mat-error>
+          <mat-error
+            *ngIf="
+              registration.get('email')?.hasError('email') &&
+              registration.get('email')?.touched
+            "
+          >
+            Please enter a valid email address.
+          </mat-error>
+        </div>
+      </div>
+
+      <div class="example-full-width">
+        <mat-label>Password:</mat-label>
+        <input
+          class="form-control"
+          type="password"
+          matInput
+          formControlName="password"
+          placeholder="Password"
+        />
+        <div class="mt-1">
+            <mat-error
+              *ngIf="
+                registration.get('password')?.hasError('required') &&
+                registration.get('password')?.touched
+              "
+            >
+              Password is required.
+            </mat-error>
+            <mat-error
+              *ngIf="
+                registration.get('password')?.hasError('password') &&
+                registration.get('password')?.touched
+              "
+            >
+              Please enter a valid Password.
+            </mat-error>
+          </div>
+        <!-- <mat-error *ngIf="registration.get('password')?.hasError('required')">
+                        Password is required.
+                      </mat-error> -->
+      </div>
+      <div class="example-full-width">
+        <mat-label>Confirm Password:</mat-label>
+        <input
+          class="form-control"
+          type="password"
+          matInput
+          formControlName="confirmPassword"
+          placeholder="Confirm Password"
+        />
+        <div class="mt-1">
+            <mat-error
+              *ngIf="
+                registration.get('confirmPassword')?.hasError('required') &&
+                registration.get('confirmPassword')?.touched
+              "
+            >
+              Password is required.
+            </mat-error>
+          </div>
+      </div>
+
+      <div class="example-full-width">
+        <mat-label>Phone:</mat-label>
+        <input
+          class="form-control"
+          type="tel"
+          minlength="10"
+          maxlength="10"
+          matInput
+          formControlName="phone"
+          placeholder="Phone"
+        />
+        <div class="mt-1">
+            <mat-error
+              *ngIf="
+                registration.get('phone')?.hasError('required') &&
+                registration.get('phone')?.touched
+              "
+            >
+              Phone number is required.
+            </mat-error>
+          </div>
+      </div>
+      <div class="example-full-width">
+        <mat-label>Location:</mat-label>
+        <input
+          class="form-control"
+          type="text"
+          matInput
+          formControlName="location"
+          placeholder="Location"
+        />
+        <div class="mt-1">
+            <mat-error
+              *ngIf="
+                registration.get('location')?.hasError('required') &&
+                registration.get('location')?.touched
+              "
+            >
+              Location number is required.
+            </mat-error>
+          </div>
+      </div>
+      <div class="example-full-width">
+        <mat-label>Image:</mat-label>
+        <input
+          class="form-control"
+          type="file"
+          matInput
+          formControlName="image"
+          (change)="selectImage($event)"
+        />
+        <!-- <div class="mt-1">
+            <mat-error
+              *ngIf="
+                registration.get('location')?.hasError('required') &&
+                registration.get('location')?.touched
+              "
+            >
+              Location number is required.
+            </mat-error>
+          </div> -->
+      </div>
+      <div>
+        <button class="btn btn-primary mx-3" type="submit" [disabled]="registration.invalid">Submit</button>
+        <input type="reset" (click)="reset()" class="btn btn-danger mx-1" value="Discard" />
+      </div>
+    </form>
+    <!-- [disabled]="cancellationForm.invalid" -->
+  </div>
+</div>

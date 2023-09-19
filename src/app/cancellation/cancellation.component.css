@@ -1,0 +1,16 @@
+.example-full-width{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.order{
+    text-decoration: none;
+    color: black;
+  
+}
+
+.cancel{
+    text-decoration: none;
+    color: black;
+    border-bottom: 2px solid blue;
+}

@@ -1,0 +1,61 @@
+<div class="container-fluid my-4">
+    <form [formGroup]="userForm" (ngSubmit)="onUpdate()"  enctype="multipart/form-data">
+        <mat-card>
+            <mat-card-header>
+              <div>
+                <div *ngFor="let item of items | keyvalue">
+                  <ng-container *ngIf="item.key === 'image'">
+                    <!-- <p>{{ item.key }}: {{ item.value }}</p> -->
+                     <img class="profile-avatar" src="http://localhost:9000/{{ item.value }}" alt="image">
+                  </ng-container>
+                 
+                  <!-- <img class="profile-avatar" *ngIf="selectedImage" [src]="selectedImage" alt="Selected Image"> -->
+                </div>
+                <div class="my-3">
+                  <input class="form-control" type="file" matInput (change)="onImageSelected($event)" value="">
+                  <input type="hidden" formControlName="image" value="image">
+                </div>
+              </div>
+              
+              <!-- <mat-card-title>
+                <div class="profile-name-placeholder">
+                </div>
+              </mat-card-title>
+              <mat-card-subtitle>
+                <div class="profile-subtitle-placeholder"></div>
+              </mat-card-subtitle> -->
+            </mat-card-header>
+            <mat-card-content>
+            
+            </mat-card-content>
+          
+            <mat-card-content>
+              <div class="profile-info-placeholder">
+                <mat-label>Name:</mat-label>
+                <input class="form-control" type="text" matInput formControlName="name" placeholder="Your Name" value="">
+
+              </div>
+              <div class="profile-info-placeholder">
+                <mat-label>E-mail:</mat-label>
+                <input class="form-control" type="email" matInput formControlName="email" placeholder="Your Name" value="">
+
+              </div>
+              <div class="profile-info-placeholder">
+                <mat-label>Phone:</mat-label>
+                <input class="form-control" type="tel" matInput formControlName="phone" placeholder="Your Name" value="">
+
+              </div>
+              <div class="profile-info-placeholder">
+                <mat-label>Location:</mat-label>
+                <input class="form-control" type="text" matInput formControlName="location" placeholder="Location" value="">
+
+              </div>
+              <div class="profile-info-placeholder">
+                <input type="submit" class="btn btn-success" value="Update" />
+                <input type="button" (click)="reset()" class="btn btn-danger mx-1" value="Discard" />
+              </div>
+            </mat-card-content> 
+          </mat-card>
+    </form>
+ 
+</div>

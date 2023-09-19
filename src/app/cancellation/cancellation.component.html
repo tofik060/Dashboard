@@ -1,0 +1,187 @@
+<!-- {{cancellationForm.value | json}}
+{{cancellationForm.pristine | json}}
+{{cancellationForm.dirty | json}} -->
+
+<div>
+  <div
+    class="container my-4"
+    style="display: flex; border-bottom: 2px solid; font-size: 18px"
+  >
+    <div class="px-4">
+      <a class="order" >Order</a>
+    </div>
+    <div>
+      <a class="cancel"
+        >Cancellation</a
+      >
+    </div>
+  </div>
+  <h1 class="my-3 mx-2 px-3 bg-light border-light rounded-2">Cancellation</h1>
+
+  <div class="container-fluid">
+    <form [formGroup]="cancellationForm" (ngSubmit)="onSubmit()" class="mx-3">
+      <div class="example-full-width">
+        <mat-label>Name:</mat-label>
+        <input
+          class="form-control"
+          type="text"
+          matInput
+          formControlName="name"
+          placeholder="Your Name"
+        />
+
+        <!--   {{cancellationForm.get('name')?.errors | json}}-->
+        <!-- <mat-error *ngIf="cancellationForm.get('name')?.hasError('minlength')">
+                    name should be minimum 10 characters!
+                </mat-error> -->
+        <div class="mt-1">
+          <mat-error
+            *ngIf="
+              cancellationForm.get('name')?.hasError('required') &&
+              cancellationForm.get('name')?.touched
+            "
+          >
+            Name is required.
+          </mat-error>
+        </div>
+      </div>
+
+      <div class="example-full-width">
+        <mat-label>Item Name:</mat-label>
+        <input
+          class="form-control"
+          type="text"
+          matInput
+          formControlName="itemName"
+          placeholder="Item Name"
+        />
+        <!-- <mat-error *ngIf="cancellationForm.get('itemName')?.errors?.['required']">
+                    Item name should be provide
+                </mat-error> -->
+        <div class="mt-1">
+          <mat-error
+            *ngIf="
+              cancellationForm.get('itemName')?.hasError('required') &&
+              cancellationForm.get('itemName')?.touched">
+            Item Name is required.
+          </mat-error>
+        </div>
+      </div>
+
+      <div class="example-full-width">
+        <mat-label>product Code:</mat-label>
+        <input
+          class="form-control"
+          type="text"
+          matInput
+          formControlName="productCode"
+          placeholder="Product Code"
+        />
+        <div class="mt-1">
+            <mat-error
+              *ngIf="
+                cancellationForm.get('productCode')?.hasError('required') &&
+                cancellationForm.get('productCode')?.touched">
+              Product Code is required.
+            </mat-error>
+          </div>
+      </div>
+
+      <div class="example-full-width">
+        <mat-label>Quantity</mat-label>
+        <input
+          class="form-control"
+          type="text"
+          matInput
+          formControlName="quantity"
+          placeholder="Quantity"
+        />
+        <div class="mt-1">
+            <mat-error
+              *ngIf="
+                cancellationForm.get('quantity')?.hasError('required') &&
+                cancellationForm.get('quantity')?.touched">
+              Product Code is required.
+            </mat-error>
+          </div>
+      </div>
+
+      <div class="example-full-width">
+        <mat-label>Price:</mat-label>
+        <input
+          class="form-control"
+          type="text"
+          matInput
+          formControlName="price"
+          placeholder="Price"
+        />
+        <div class="mt-1">
+            <mat-error
+              *ngIf="
+                cancellationForm.get('price')?.hasError('required') &&
+                cancellationForm.get('price')?.touched">
+              Product Code is required.
+            </mat-error>
+          </div>
+      </div>
+
+      <div class="example-full-width">
+        <mat-label>Order Date:</mat-label>
+        <input
+          class="form-control"
+          type="date"
+          matInput
+          formControlName="orderDate"
+          placeholder="Order Date"
+        />
+        <div class="mt-1">
+            <mat-error
+              *ngIf="
+                cancellationForm.get('orderDate')?.hasError('required') &&
+                cancellationForm.get('orderDate')?.touched">
+              Order Date is required.
+            </mat-error>
+          </div>
+      </div>
+
+      <div class="example-full-width">
+        <mat-label>Cancel Date:</mat-label>
+        <input
+          class="form-control"
+          type="date"
+          matInput
+          formControlName="cancelDate"
+          placeholder="Cancel Date"
+        />
+        <div class="mt-1">
+            <mat-error
+              *ngIf="
+                cancellationForm.get('cancelDate')?.hasError('required') &&
+                cancellationForm.get('cancelDate')?.touched">
+              Order Date is required.
+            </mat-error>
+          </div>
+      </div>
+
+      <div class="example-full-width">
+        <mat-label>Why do you want to cancel your products?</mat-label>
+        <input
+          class="form-control"
+          type="text"
+          matInput
+          formControlName="description"
+          placeholder="Show reason here"
+        />
+      </div>
+      <!--   {{cancellationForm.get('description')?.errors | json}}-->
+      <!-- <mat-error *ngIf="cancellationForm.get('description')?.hasError('required')">
+                Your reason should be required!
+            </mat-error> -->
+      <div>
+        <button class="btn btn-primary mx-3" type="submit" [disabled]="cancellationForm.invalid">Submit</button>
+        <button class="btn btn-danger" type="reset" (click)="reset()" >Cancel</button>  
+    </div>
+    </form>
+    <!-- [disabled]="cancellationForm.invalid" -->
+  </div>
+</div>

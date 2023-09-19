@@ -1,0 +1,24 @@
+.removeDiv{
+    background: black;
+    margin-top: 60px;
+    width: 32%;
+    padding: 35px;
+    border-radius: 10px;
+}
+
+.removeImg{
+    border-radius: 100%;
+    width: 30%;
+    margin-left: auto;
+    display: block;
+    margin-right: auto;
+    height: 100px;
+    width: 100px;
+}
+
+.RemoveDivAccount{
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    margin: 18px
+}

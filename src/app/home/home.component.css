@@ -1,0 +1,109 @@
+.Arrow {
+    display: flex;
+    float: right;
+    height: 18px;
+}
+
+.asse {
+    height: 21px;
+}
+
+.hometable {
+    border-collapse: separate;
+    border-spacing: 14px 0px;
+}
+
+.bir {
+    color: white;
+    background-color: rgb(53, 53, 280);
+    border-radius: 5px;
+    padding: 8px;
+    width: 280px;
+}
+
+a {
+    color: white;
+}
+
+.hol {
+    color: white;
+    background-color: rgb(221, 221, 9);
+    border-radius: 5px;
+    padding: 8px;
+    width: 280px;
+}
+
+.com {
+    color: white;
+    background-color: green;
+    border-radius: 5px;
+    padding: 8px;
+    width: 280px;
+}
+
+.Qui {
+    color: white;
+    background-color: red;
+    border-radius: 5px;
+    padding: 8px;
+    width: 250px;
+}
+
+.graphtable {
+    border-collapse: separate;
+    border-spacing: 14px 0px;
+}
+
+.weekend {
+    height: 368px;
+    width: 500px;
+    border: 2px solid rgb(219, 207, 207);
+    border-radius: 3px;
+    margin-right: 37px;
+}
+
+.pweek,
+.pmonthly {
+    background-color: rgb(219, 207, 207);
+    padding: 10px;
+    border-bottom: 2px solid rgb(219, 207, 207);
+}
+
+.weekimg {
+    width: 496px;
+    height: 288px;
+    padding: 5px;
+}
+
+.monthly {
+    height: 368px;
+    width: 500px;
+    border: 2px solid rgb(219, 207, 207);
+    border-radius: 3px;
+}
+
+.monthlyimg {
+    width: 496px;
+    height: 288px;
+    padding: 5px;
+}
+
+.emp {
+    height: 368px;
+    width: 1054px;
+    border: 2px solid rgb(219, 207, 207);
+    border-radius: 3px;
+    margin: 27px;
+}
+
+.pemp {
+
+    background-color: rgb(219, 207, 207);
+    padding: 10px;
+    border-bottom: 2px solid rgb(219, 207, 207);
+}
+
+.inputQuantity {
+    display:block;
+    float: right;
+}

@@ -1,0 +1,129 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <mat-toolbar
+      ><a class="navA" routerLink="home"
+        ><img
+          class="rounded-circle"
+          style="width: 30px; height: 30px"
+          src="../../assets/shoppingicon.jpeg"
+          alt=""
+        />
+        shopping</a
+      >
+    </mat-toolbar>
+    <mat-divider></mat-divider>
+    <h3>
+      <a class="nava" routerLink="home"
+        ><mat-icon>dashboard</mat-icon> Dashboard</a
+      >
+    </h3>
+    <!-- <mat-divider style="border-color: black;border-top-width: 1px;"></mat-divider> -->
+    <mat-nav-list>
+      <a mat-list-item routerLink="home"><mat-icon>home</mat-icon> Home</a>
+      <a mat-list-item routerLink="products"
+        ><mat-icon>shopping</mat-icon> Products</a
+      >
+      <a mat-list-item routerLink="category"
+        ><mat-icon>categorys</mat-icon> Category</a
+      >
+      <a mat-list-item routerLink="order"
+        ><mat-icon>shopping_cart</mat-icon> Order</a
+      >
+      <a mat-list-item routerLink="offer"><mat-icon>cloud</mat-icon> Offer</a>
+      <mat-divider class="mat-divider1"></mat-divider>
+      <a mat-list-item routerLink="profile"
+        >	<mat-icon>account_circle</mat-icon> Profile</a
+      >
+      <a mat-list-item routerLink="registration"
+        ><mat-icon>assignment</mat-icon> Register</a
+      >
+      <a mat-list-item routerLink=""><mat-icon>login</mat-icon> Login</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <mat-toolbar-row class="justify-content-between">
+        <button
+          type="button"
+          aria-label="Toggle sidenav"
+          mat-icon-button
+          (click)="drawer.toggle()"
+          *ngIf="isHandset$ | async"
+        >
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+        <span
+          ><a class="navA" routerLink="home"
+            ><img
+              class="rounded-circle"
+              style="width: 30px; height: 30px"
+              src="../../assets/shoppingicon.jpeg"
+              alt=""
+            />
+            shopping</a
+          >
+        </span>
+        <div class="row mr-2 ml-auto">
+          <ol>
+            <li>
+              <input
+                class="form-control"
+                type="text"
+                placeholder="search for..."
+                aria-label="search"
+              />
+            </li>
+            <li>
+              <button
+                mat-button
+                [matMenuTriggerFor]="menu"
+                class="user mt-2 d-flex align-item center"
+              >
+                <img
+                  class="rounded-circle"
+                  src="../../assets/profile.jpg"
+                  alt=""
+                  style="width: 30px; height: 30px"
+                />
+                <!--User Name-->
+                <!-- {{ user ? user.name : "User name" }} -->
+                <mat-icon class="user-image-icon">keyboard_arrow_down</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <!-- <button mat-list-item type="button" routerLink="/logout">
+                  <a routerLink="/logout" style="text-decoration: none;color: black;">
+                    <mat-icon>exit_to_app</mat-icon>
+                    logout
+                  </a>
+                </button> -->
+                <a routerLink="/profile" style="text-decoration: none;color: black; margin: 10px 10px;">
+                  <mat-icon>account_circle</mat-icon>
+                  Profile
+                </a>
+                <!-- <hr style=" margin: 10px 10px;">
+                <a routerLink="" style="text-decoration: none;color: black; margin: 10px 10px;">
+                  <mat-icon>login</mat-icon> Login
+                </a> -->
+                <hr style=" margin: 10px 10px;">
+                <a routerLink="/logout" style="text-decoration: none;color: black; margin: 10px 10px;">
+                  <mat-icon>exit_to_app</mat-icon>
+                  logout
+                </a>
+              </mat-menu>
+            </li>
+          </ol>
+        </div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <mat-divider></mat-divider>
+    <!-- Add Content Here -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

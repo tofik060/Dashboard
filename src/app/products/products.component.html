@@ -1,0 +1,552 @@
+<div>
+  <h1 class="my-3 mx-2 px-3 bg-light border-light rounded-2">Product</h1>
+  <div class="searchbox py-1">
+    <table class="table searchtable">
+      <tr>
+        <td>
+          <input class="search" type="text" placeholder="Search" />
+        </td>
+        <td>
+          <!-- <label for="Filter">Filter</label>
+          <select class="searchselect" name="Filter" id="Filter">
+            <option value="Jeans">100-200</option>
+            <option value="Shirt">299-499</option>
+            <option value="T-shirt">599-1999</option>
+            <option value="Bags">2999-3599</option>
+          </select> -->
+
+          <mat-form-field style="margin-right: -127px">
+            <mat-label>Filter</mat-label>
+            <mat-select>
+              <mat-option value="Jeans">100-200</mat-option>
+              <mat-option value="shirt">299-499</mat-option>
+              <mat-option value="T-shirt">599-1999</mat-option>
+              <mat-option value="Bags">2999-3599</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="pro">
+    <mat-grid-list cols="5" rowHeight="5:8">
+      <mat-grid-tile>
+        <mat-card>
+          <mat-card-content>
+            <img class="proimage" src="../../assets/tshirt.jpg" alt="" />
+          </mat-card-content>
+          <div class="prodiv">
+            <p class="tshirt">{{ user1 ? user1.itemName : "T-shirt for man" }}</p>
+            <p class="ptshirt">
+              <sup>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+              </sup>
+              {{ user1 ? user1.price : "629 " }} <sup>00</sup>
+            </p>
+            <p class="ptshirtstrike">
+              <s>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+                1,099.00
+              </s>
+            </p>
+            <button
+              class="btn btn-primary my-1"
+              routerLink="/order-details/{{ user1 ? user1._id : ' ' }}"
+              style="cursor: pointer"
+            >
+              Order Now
+            </button>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-card >
+          <mat-card-content>
+            <img class="proimage" src="../../assets/shirt.jpg" alt="" />
+          </mat-card-content>
+          <div class="prodiv">
+            <p class="tshirt">{{ user8 ? user8.itemName : "Shirt for man" }}</p>
+            <p class="ptshirt">
+              <sup>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+              </sup>
+              {{ user8 ? user8.price : "419" }} <sup>00</sup>
+            </p>
+            <p class="ptshirtstrike">
+              <s>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+                4,999.00
+              </s>
+            </p>
+            <button
+            class="btn btn-primary my-1"
+            routerLink="/order-details/{{ user8 ? user8._id : ' ' }}"
+            style="cursor: pointer"
+          >
+            Order Now
+          </button>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-card >
+          <mat-card-content>
+            <img class="proimage" src="../../assets/bag.jpg" alt="" />
+          </mat-card-content>
+          <div class="prodiv">
+            <p class="tshirt">{{ user9 ? user9.itemName : "bags for man & women" }}</p>
+            <p class="ptshirt">
+              <sup>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+              </sup>
+              {{ user9 ? user9.price : "699" }} <sup>00</sup>
+            </p>
+            <p class="ptshirtstrike">
+              <s>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+                2,100.00
+              </s>
+            </p>
+            <button
+            class="btn btn-primary my-1"
+            routerLink="/order-details/{{ user9 ? user9._id : ' ' }}"
+            style="cursor: pointer"
+          >
+            Order Now
+          </button>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-card >
+          <mat-card-content>
+            <img class="proimage" src="../../assets/jeans.jpg" alt="" />
+          </mat-card-content>
+          <div class="prodiv">
+            <p class="tshirt">{{ user2 ? user2.itemName : "Jeans for man" }}</p>
+            <p class="ptshirt">
+              <sup>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+              </sup>
+              {{ user2 ? user2.price : "1,299" }} <sup>00</sup>
+            </p>
+            <p class="ptshirtstrike">
+              <s>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+                1.229.00
+              </s>
+            </p>
+            <button
+              class="btn btn-primary my-1"
+              routerLink="/order-details/{{ user2 ? user2._id : ' ' }}"
+              style="cursor: pointer"
+            >
+              Order Now
+            </button>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-card >
+          <mat-card-content>
+            <img class="proimage" src="../../assets/menwatch.jpg" alt="" />
+          </mat-card-content>
+          <div class="prodiv">
+            <p class="tshirt">{{ user3 ? user3.itemName : "watch for man" }}</p>
+            <p class="ptshirt">
+              <sup>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+              </sup>
+              {{ user3 ? user3.price : "10,459" }} <sup>00</sup>
+            </p>
+            <p class="ptshirtstrike">
+              <s>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+                10,999.00
+              </s>
+            </p>
+            <button
+            class="btn btn-primary my-1"
+            routerLink="/order-details/{{ user3 ? user3._id : ' ' }}"
+            style="cursor: pointer"
+          >
+            Order Now
+          </button>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+
+  <!--/****************************************************/-->
+
+  <div class="pro">
+    <mat-grid-list cols="5" rowHeight="5:8">
+      <mat-grid-tile>
+        <mat-card >
+          <mat-card-content>
+            <img class="proimage" src="../../assets/watchfirebolt.jpg" alt="" />
+          </mat-card-content>
+          <div class="prodiv">
+            <p class="tshirt">{{user0? user0.itemName:'Fire-bolt watch'}}</p>
+            <p class="ptshirt">
+              <sup>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+              </sup>
+              {{user0? user0.price:'2,199'}} <sup>00</sup>
+            </p>
+            <p class="ptshirtstrike">
+              <s>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+                12,499.00
+              </s>
+            </p>
+            <button
+              class="btn btn-primary my-1"
+              routerLink="/order-details/{{ user0 ? user0._id : ' ' }}"
+              style="cursor: pointer"
+            >
+              Order Now
+            </button>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-card >
+          <mat-card-content>
+            <img class="proimage" src="../../assets/boat.jpg" alt="" />
+          </mat-card-content>
+          <div class="prodiv">
+            <p class="tshirt">{{ user7 ? user7.itemName : "Boat Airdopes" }}</p>
+            <p class="ptshirt">
+              <sup>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+              </sup>
+              {{ user7 ? user7.price : "1,499" }} <sup>00</sup>
+            </p>
+            <p class="ptshirtstrike">
+              <s>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+                4,490.00
+              </s>
+            </p>
+            <button
+            class="btn btn-primary my-1"
+            routerLink="/order-details/{{ user7 ? user7._id : ' ' }}"
+            style="cursor: pointer"
+          >
+            Order Now
+          </button>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-card >
+          <mat-card-content>
+            <img class="proimage" src="../../assets/earheadphone.jpg" alt="" />
+          </mat-card-content>
+          <div class="prodiv">
+            <p class="tshirt">{{ user4 ? user4.itemName : "Boat Ear Headphone" }}</p>
+            <p class="ptshirt">
+              <sup>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+              </sup>
+              {{ user4 ? user4.price : "1,499" }} <sup>00</sup>
+            </p>
+            <p class="ptshirtstrike">
+              <s>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+                3,990.00
+              </s>
+            </p>
+            <button
+            class="btn btn-primary my-1"
+            routerLink="/order-details/{{ user4 ? user4._id : ' ' }}"
+            style="cursor: pointer"
+          >
+            Order Now
+          </button>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-card >
+          <mat-card-content>
+            <img class="proimage" src="../../assets/mouse.jpg" alt="" />
+          </mat-card-content>
+          <div class="prodiv">
+            <p class="tshirt">{{ user5 ? user5.itemName : "Mouse" }}</p>
+            <p class="ptshirt">
+              <sup>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+              </sup>
+              {{ user5 ? user5.price : "249" }} <sup>00</sup>
+            </p>
+            <p class="ptshirtstrike">
+              <s>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+                699.00
+              </s>
+            </p>
+            <button
+            class="btn btn-primary my-1"
+            routerLink="/order-details/{{ user5 ? user5._id : ' ' }}"
+            style="cursor: pointer"
+          >
+            Order Now
+          </button>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-card >
+          <mat-card-content>
+            <img class="proimage" src="../../assets/tablet.jpg" alt="" />
+          </mat-card-content>
+          <div class="prodiv">
+            <p class="tshirt">{{ user6 ? user6.itemName : "Apple Tablet" }}</p>
+            <p class="ptshirt">
+              <sup>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+              </sup>
+              {{ user6 ? user6.price : "629 " }} <sup>00</sup>
+            </p>
+            <p class="ptshirtstrike">
+              <s>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  fill="currentColor"
+                  class="bi bi-currency-rupee"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M4 3.06h2.726c1.22 0 2.12.575 2.325 1.724H4v1.051h5.051C8.855 7.001 8 7.558 6.788 7.558H4v1.317L8.437 14h2.11L6.095 8.884h.855c2.316-.018 3.465-1.476 3.688-3.049H12V4.784h-1.345c-.08-.778-.357-1.335-.793-1.732H12V2H4v1.06Z"
+                  />
+                </svg>
+                30,900.00
+              </s>
+            </p>
+            <button
+            class="btn btn-primary my-1"
+            routerLink="/order-details/{{ user6 ? user6._id : ' ' }}"
+            style="cursor: pointer"
+          >
+            Order Now
+          </button>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>

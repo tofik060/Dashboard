@@ -1,0 +1,62 @@
+<!-- <div class="container fluid my-3">
+  <h1 class="my-3 px-3 bg-light border-light rounded-2">
+    User Personal Details
+  </h1>
+
+  <div class="card">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div class="row px-2 py-2">
+        <div class="col-xl-3">
+          <img src="../../assets/tshirt.jpg" alt="" />
+        </div>
+        <div class="col-xl-9">
+          <ul>
+            <li>
+                <label>Name :</label> <span *ngIf="EditMode"> Naruto</span>
+              <input
+                *ngIf="!EditMode"
+                class="form-control"
+                type="text"
+                formControlName="name"
+                placeholder="Name"
+              />
+            </li>
+            <li>
+                <label>Email Id :</label> <span *ngIf="EditMode">naruto@gmail.com</span>
+              <input
+                *ngIf="!EditMode"
+                class="form-control"
+                type="email"
+                formControlName="email"
+                placeholder="E-mail"
+              />
+            </li>
+            <li>
+                <label>Phone Number :</label><span *ngIf="EditMode"> 9865625258 </span>
+              <input
+                *ngIf="!EditMode"
+                class="form-control"
+                type="tel"
+                formControlName="phone"
+                placeholder="Phone"
+              />
+            </li>
+            <li *ngIf="!EditMode">
+              <button class="btn btn-primary" type="submit">
+                Profile Edit
+              </button>
+              <button
+                *ngIf="!EditMode"
+                routerLink="/dashboard"
+                class="btn btn-danger mx-1"
+                type="button"
+              >
+                Discard
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </form>
+  </div>
+</div> -->

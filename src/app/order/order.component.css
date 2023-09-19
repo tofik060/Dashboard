@@ -1,0 +1,11 @@
+
+.order{
+    text-decoration: none;
+    color: black;
+    border-bottom: 2px solid blue;
+}
+
+.cancel{
+    text-decoration: none;
+    color: black;
+}
