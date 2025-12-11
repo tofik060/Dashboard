@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DashboardService } from '../services/dashboard.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../order-register/confirm-dialog.component';
 
 @Component({
   selector: 'app-register',
@@ -14,7 +17,9 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -32,12 +37,8 @@ export class RegisterComponent implements OnInit {
   selectImage(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      console.log('File Image ', file);
       this.selectedImage = file;
-      console.log('Image ', this.selectedImage);
     }
-    // this.selectedImage = event.target.files[0]
-    // console.log("File Image ",this.selectedImage)
   }
   onSubmit() {
     if (this.registration.valid) {
@@ -50,37 +51,38 @@ export class RegisterComponent implements OnInit {
         formData.append('location', this.registration.get('location')?.value);
         formData.append('image', this.selectedImage);
 
-       // console.log(this.registration.value);
-
         this.dashboardService.register(formData).subscribe(
           (response) => {
-            console.log("Register",response);
+            this.snackBar.open('Registration submitted successfully', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'end',
+              verticalPosition: 'top'
+            });
             this.router.navigate(['/']);
           },
           (error) => {
-            console.error(error);
+            throw error;
           }
         );
       
     }
-    // this.router.navigate(['/registration']);
   }
   reset() {
-    if (window.confirm('Do You Want to Exit')) {
-      this.registration.reset();
-      this.router.navigate(['/registration']);
-    }
-  }
-  // private createFormData(): FormData {
-  //   const formData = new FormData();
-  //   formData.append('name', this.registration.get('name')?.value);
-  //   formData.append('email', this.registration.get('email')?.value);
-  //   formData.append('password', this.registration.get('password')?.value);
-  //   formData.append('confirmPassword', this.registration.get('confirmPassword')?.value);
-  //   formData.append('phone', this.registration.get('phone')?.value);
-  //   formData.append('location', this.registration.get('location')?.value);
-  //   formData.append('image', this.selectedImage);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '300px',
+      data: { message: 'Do You Want to Exit?' }
+    });
 
-  //   return formData;
-  // }
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.registration.reset();
+        this.snackBar.open('Registration has been cancelled', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        });
+        this.router.navigate(['/']);
+      }
+    });
+  }
 }

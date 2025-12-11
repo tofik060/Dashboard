@@ -1,41 +1,137 @@
 <h1 class="my-3 mx-2 px-3 bg-light border-light rounded-2">Order Details</h1>
 <div class="container-fluid">
-    <form [formGroup]="orderListForm" (ngSubmit)="onSubmit()">
-        <mat-card>
-            <mat-card-header>
-              <mat-card-title>
-                <div mat-card-avatar class="profile-avatar"></div>
-              </mat-card-title>
-            </mat-card-header>
-        
-            <mat-card-content style="margin-bottom: 13px;">
-              <div class="order-details-placeholder">
-                <mat-label>Item Name</mat-label>
-                <input class="form-control" type="text" matInput formControlName="itemName" placeholder="Item Name">
-              </div>
-              <div class="order-details-placeholder">
-                <mat-label>Quantity</mat-label>
-                <input class=" form-control" type="text" matInput formControlName="quantity" placeholder="Quantity">
-              </div>
-              <div class="order-details-placeholder">
-                <mat-label>Product Code</mat-label>
-                <input class=" form-control" type="text" matInput formControlName="productCode" placeholder="Product Code">
-              </div>
-              <div class="order-details-placeholder">
-                <mat-label>Order Date</mat-label>
-                <input class=" form-control" type="date" matInput formControlName="orderDate" placeholder="Order Date">
-              </div>
-              <div class="order-details-placeholder">
-                <mat-label>Price</mat-label>
-                <input class=" form-control" type="text" matInput formControlName="price" placeholder="Price">
-              </div>
+  <form [formGroup]="orderListForm">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <div mat-card-avatar class="profile-avatar">
+            <img
+              class="proimage"
+              [src]="product?.image ? '../../assets/' + product.image : ''"
+              [alt]="product?.itemName || ''"
+            />
+          </div>
+        </mat-card-title>
+      </mat-card-header>
 
-              <div class="order-details-placeholder">
-                <button class="btn btn-primary mx-1" type="submit" >Submit</button>
-                <button class="btn btn-danger mx-1" type="reset" (click)="reset()" >Cancel</button>
-              </div>
-            </mat-card-content>
-          </mat-card>
-    </form>
- 
+      <mat-card-content style="margin-bottom: 13px">
+        <div class="order-details-placeholder">
+          <mat-label>Item Name</mat-label>
+          <input
+            class="form-control"
+            type="text"
+            matInput
+            formControlName="itemName"
+            placeholder="Item Name"
+          />
+        </div>
+        <div class="order-details-placeholder">
+          <mat-label>Quantity</mat-label>
+          <input
+            class="form-control"
+            type="text"
+            matInput
+            formControlName="quantity"
+            placeholder="Quantity"
+          />
+        </div>
+        <div class="order-details-placeholder">
+          <mat-label>Product Code</mat-label>
+          <input
+            class="form-control"
+            type="text"
+            matInput
+            formControlName="productCode"
+            placeholder="Product Code"
+          />
+        </div>
+        <div class="order-details-placeholder">
+          <mat-label>Order Date</mat-label>
+          <input
+            class="form-control"
+            type="date"
+            matInput
+            formControlName="orderDate"
+            placeholder="Order Date"
+          />
+        </div>
+        <div class="order-details-placeholder">
+          <mat-label>Price</mat-label>
+          <input
+            class="form-control"
+            type="text"
+            matInput
+            formControlName="price"
+            placeholder="Price"
+          />
+        </div>
+        <div></div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>
+
+<h1 class="my-3 mx-2 px-3 bg-light border-light rounded-2">Customer Details</h1>
+
+<div class="container-fluid">
+  <form [formGroup]="orderListForm">
+    <mat-card>
+      <mat-card-content style="margin-bottom: 13px">
+        <div class="order-details-placeholder">
+          <mat-label>Name</mat-label>
+          <input
+            class="form-control"
+            type="text"
+            matInput
+            formControlName="customerName"
+            placeholder="Customer Name"
+          />
+        </div>
+        <div class="order-details-placeholder">
+          <mat-label>Email</mat-label>
+          <input
+            class="form-control"
+            type="email"
+            matInput
+            formControlName="customerEmail"
+            placeholder="Customer Email"
+          />
+        </div>
+        <div class="order-details-placeholder">
+          <mat-label>Phone</mat-label>
+          <input
+            class="form-control"
+            type="number"
+            matInput
+            formControlName="customerPhone"
+            placeholder="Customer Phone"
+          />
+        </div>
+        <div class="order-details-placeholder">
+          <mat-label>Address</mat-label>
+          <input
+            class="form-control"
+            type="text"
+            matInput
+            formControlName="customerAddress"
+            placeholder="Customer Address"
+          />
+        </div>
+
+        <div class="order-details-placeholder">
+          <button
+            class="btn btn-primary mx-1"
+            type="submit"
+            [disabled]="orderListForm.invalid"
+            (click)="onSubmit()"
+          >
+            Submit
+          </button>
+          <button class="btn btn-danger mx-1" type="button" (click)="reset()">
+            Cancel
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
 </div>

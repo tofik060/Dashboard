@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../services/dashboard.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../order-register/confirm-dialog.component';
 
 @Component({
   selector: 'app-change-password',
@@ -16,7 +19,9 @@ export class ChangePasswordComponent implements OnInit {
     private dashboardService: DashboardService,
     private router: Router,
     private fb : FormBuilder,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ){
     this.userForm = this.fb.group({
       email:['',[Validators.required,Validators.email]],
@@ -28,20 +33,35 @@ export class ChangePasswordComponent implements OnInit {
     this.id = this.activatedRoute.snapshot.paramMap.get('id');
   }
   onSubmit(){
-   // console.log("Password",this.userForm.value)
    if(this.userForm.valid){
     this.dashboardService.changePassword(this.id,this.userForm.value).subscribe(
       (response) => {
-        console.log("Password Change",response)
+        this.snackBar.open('Password change submitted successfully', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        });
         this.router.navigate(['/profile'])
       }
     )
    }
   }
   onDelete(){
-    if(window.confirm('Do you want to discard !')){
-      this.userForm.reset();
-      this.router.navigate(['/profile'])
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '300px',
+      data: { message: 'Do you want to discard!' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.userForm.reset();
+        this.snackBar.open('Password has been discarded', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        });
+        this.router.navigate(['/profile']);
+      }
+    });
   }
 }

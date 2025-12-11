@@ -1,85 +1,108 @@
 <div class="container-fluid login my-5">
-  <div *ngIf="error" class="errordiv alert alert-info" role="alert" >
-    {{error}}
+  <div *ngIf="error" class="errordiv alert alert-info" role="alert">
+    {{ error }}
   </div>
-    <div class="loginsvg">
-        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-lock-fill"
-            viewBox="0 0 16 16">
-            <path
-                d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
-        </svg>
+  <div class="loginsvg">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="60"
+      height="60"
+      fill="currentColor"
+      class="bi bi-lock-fill"
+      viewBox="0 0 16 16"
+    >
+      <path
+        d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"
+      />
+    </svg>
+  </div>
+  <div class="logindiv">Please enter your email details</div>
+  <form>
+    <div class="form-group mb-4">
+      <input
+        #emailControl="ngModel"
+        appEmailValidator
+        class="form-control"
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        placeholder="Email"
+        required
+        email
+      />
+      <div
+        *ngIf="
+          emailControl.invalid && (emailControl.dirty || emailControl.touched)
+        "
+        class="text-danger mt-1"
+      >
+        <div *ngIf="emailControl.errors?.['required']">Email is required.</div>
+        <div *ngIf="emailControl.errors?.['email']">
+          Please enter a valid email address.
+        </div>
+      </div>
     </div>
-    <div class="logindiv">
-        Please enter your email details
+
+    <div class="form-group">
+      <input
+        #passwordControl="ngModel"
+        class="form-control"
+        name="password"
+        type="password"
+        [(ngModel)]="password"
+        placeholder="Password"
+        required
+        password
+      />
+      <div
+        *ngIf="
+          passwordControl.invalid &&
+          (passwordControl.dirty || passwordControl.touched)
+        "
+        class="text-danger mt-1"
+      >
+        <div *ngIf="passwordControl.errors?.['required']">
+          Password is required.
+        </div>
+      </div>
     </div>
-     <form >
-        <div class="form-group mb-4">
-            <input #emailControl="ngModel" appEmailValidator class="form-control" type="email" name="email"
-                [(ngModel)]="email" placeholder="Email" required email />
-                <div *ngIf="emailControl.invalid && (emailControl.dirty || emailControl.touched)" class="text-danger mt-1">
-                    <div *ngIf="emailControl.errors?.['required']">Email is required.</div>
-                    <div *ngIf="emailControl.errors?.['email']">Please enter a valid email address.</div>
-                  </div>
-        </div>
-       
 
-        <div class="form-group">
-            <input #passwordControl="ngModel" class="form-control"  name="password" type="password" [(ngModel)]="password" placeholder="Password" required password/>
-            <div *ngIf="passwordControl.invalid && (passwordControl.dirty || passwordControl.touched)" class="text-danger mt-1">
-                <div *ngIf="passwordControl.errors?.['required']">Password is required.</div>
-                <!-- <div *ngIf="passwordControl.errors?.['password']">Please enter a valid password.</div> -->
-              </div>
-        </div>
-      
-          <div class="d-flex my-3">
-            <!-- Checkbox -->
-            <div class="form-check" style="margin-right: 69px;">
-              <input class="form-check-input" type="checkbox" value="password" id="password" />
-              <label class="form-check-label text-white" for="password"> Remember me </label>
-            </div>
+    <div class="d-flex justify-content-between my-3">
+      <!-- Checkbox -->
+      <div class="form-check" style="margin-right: 69px">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value="password"
+          id="password"
+        />
+        <label class="form-check-label text-white" for="password">
+          Remember me
+        </label>
+      </div>
 
-            <div class="">
-              <!-- Simple link -->
-              <a routerLink="/forget-password" style="text-decoration: none;">Forgot password?</a>
-            </div>
-          </div>
-      
-        <div class="form-group">
-            <button class="btn btn-primary form-control mb-4" (click)="login()"  [disabled]="emailControl.invalid || passwordControl.invalid">Login</button>
-          
-        </div>
-        <div class="form-group text-white text-center">
-          <h4> Not a member? <a routerLink="/registration" style="text-decoration: none;">Register</a></h4>
-        </div>
-    </form> 
-
-  
-      
-</div>
-
-
-<!-- <form>
-    <label for="name">Name</label>
-    <input type="text" id="name" [(ngModel)]="name" name="name" required minlength="3" />
-  
-    <div *ngIf="name.invalid && (name.dirty || name.touched)">
-      <div *ngIf="name.errors.required">Name is required.</div>
-      <div *ngIf="name.errors.minlength">Name should be at least 3 characters long.</div>
+      <div>
+        <!-- Simple link -->
+        <a routerLink="/forget-password" style="text-decoration: none"
+          >Forgot password?</a
+        >
+      </div>
     </div>
-  
-    <label for="email">Email</label>
-    <input
-      type="email"
-      id="email"
-      [(ngModel)]="email"
-      name="email"
-      required
-      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-    />
-  
-    <div *ngIf="email.invalid && (email.dirty || email.touched)">
-      <div *ngIf="email.errors.required">Email is required.</div>
-      <div *ngIf="email.errors.pattern">Please enter a valid email address.</div>
+
+    <div class="form-group">
+      <button
+        class="btn btn-primary form-control mb-4"
+        (click)="login()"
+        [disabled]="emailControl.invalid || passwordControl.invalid"
+      >
+        Login
+      </button>
+    </div>
+    <div class="form-group text-white text-center">
+      <h4>
+        Not a member?
+        <a routerLink="/registration" style="text-decoration: none">Register</a>
+      </h4>
     </div>
   </form>
-   -->
+</div>

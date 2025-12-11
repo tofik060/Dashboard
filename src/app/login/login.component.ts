@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { DashboardService } from '../services/dashboard.service';
-import { BehaviorSubject } from 'rxjs';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -23,38 +21,33 @@ export class LoginComponent implements OnInit {
     private cookie: CookieService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // If user is already logged in, redirect to home
+    const token = localStorage.getItem('token');
+    if (token || this.dashboardService.isLoggedIn) {
+      this.router.navigate(['/home']);
+    }
+  }
 
   login() {
-    
-      // if (this.dashboardService.login(this.email, this.password)) {
-      //   this.route.navigate(['/home']);
-      // }
       this.dashboardService.login(this.email, this.password) .subscribe((response: any) => {
         if(!response.userData){
-          console.log("Invalid user details, Please try again later!");
           this.error = "Invalid user details, Please try again later!"
         }
         if (this.password != response.userData.password) {
-          console.log('Login Successfull');
           localStorage.setItem('token', response.token);
+          localStorage.setItem('userInfo', JSON.stringify(response.userData));
           this.cookie.set('token', response.token, {
-            expires: new Date(Date.now() + 60 * 1000),
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days in milliseconds
           });
+          // Set isLoggedIn to true after successful login
+          this.dashboardService.isLoggedIn = true;
           this.router.navigate(['/home']);
+          window.location.reload();
         } else {
           this.router.navigate(['/']);
         }
-
-        //const expirationTime = new Date(Date.now() + 60000);
-        // const expirationTimestamp = new Date().getTime() + 60 * 1000;
-        // const tokenObject = {
-        //   value: response.token,
-        //   timestamp: expirationTimestamp,
-        // };
-
-        // localStorage.setItem('token', JSON.stringify(tokenObject));
-      });
+  });
    
   }
 }

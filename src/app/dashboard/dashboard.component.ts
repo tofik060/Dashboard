@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from '../services/dashboard.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +18,8 @@ export class DashboardComponent implements OnInit {
     private fb : FormBuilder,
     private router : Router,
     private activatedRoute : ActivatedRoute,
-    private dashboardService : DashboardService
+    private dashboardService : DashboardService,
+    private snackBar: MatSnackBar
   ){}
 
   ngOnInit(): void {
@@ -42,12 +44,13 @@ export class DashboardComponent implements OnInit {
   }
 
   onSubmit(){
-   // this.userForm.value
-   // console.log(this.userForm.value)
-    // this.dashboardService.register(this.userForm.value).subscribe(
-    //   (response) =>{console.log("Dashbord Data : ",response)},
-    //   (error) =>{console.error(error)},
-    // )
+    if (this.userForm.valid) {
+      this.snackBar.open('Form submitted successfully', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'end',
+        verticalPosition: 'top'
+      });
+    }
   }
 } 
  

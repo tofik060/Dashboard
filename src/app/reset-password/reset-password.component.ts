@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DashboardService } from '../services/dashboard.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-reset-password',
@@ -19,11 +20,11 @@ export class ResetPasswordComponent {
     private dashboardService: DashboardService,
     private router: Router,
     private fb : FormBuilder,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar
   ){
     this.userForm = this.fb.group({
       email:['',[Validators.required,Validators.email]],
-      //password:['',[Validators.required]],
       newPassword:['',[Validators.required]]
     })
   }
@@ -32,16 +33,18 @@ export class ResetPasswordComponent {
     this.token = this.activatedRoute.snapshot.paramMap.get('token');
   }
   onSubmit(){
-   // console.log("Password",this.userForm.value)
    if(this.userForm.valid){
     this.dashboardService.resetPassword(this.id,this.token,this.userForm.value).subscribe(
       (response) => {
-        console.log("Password Change",response)
         this.success = true;
+        this.snackBar.open('Password reset submitted successfully', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        });
         this.router.navigate(['/'])
       },
       (error) =>{
-        console.log("You lost your authentication")
         this.error = "You lost your authentication";
       }
     )

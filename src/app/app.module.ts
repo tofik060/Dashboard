@@ -38,14 +38,22 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RegisterComponent } from './register/register.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { OrderRegisterComponent } from './order-register/order-register.component';
+import { ConfirmDialogComponent } from './order-register/confirm-dialog.component';
+import { CustomerDetailsDialogComponent } from './order/customer-details-dialog.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 import { RequestInterceptor } from './request.interceptor';
+import { ErrorInterceptor } from './error.interceptor';
 import { LogoutComponent } from './logout/logout.component';
 import { SearchComponent } from './search/search.component';
 import { RemoveAccountComponent } from './remove-account/remove-account.component';
 import { ForgetPasswordComponent } from './forget-password/forget-password.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -68,6 +76,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     RegisterComponent,
     EditUserComponent,
     OrderRegisterComponent,
+    ConfirmDialogComponent,
+    CustomerDetailsDialogComponent,
     LogoutComponent,
     SearchComponent,
     RemoveAccountComponent,
@@ -97,10 +107,20 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     MatDatepickerModule,
     HttpClientModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatTooltipModule,
+    MatDialogModule,
+    NgChartsModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: RequestInterceptor,
+    multi: true
+  },
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: ErrorInterceptor,
     multi: true
   },
   CookieService

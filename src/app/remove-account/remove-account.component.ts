@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DashboardService } from '../services/dashboard.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../order-register/confirm-dialog.component';
 
 @Component({
   selector: 'app-remove-account',
@@ -20,7 +23,9 @@ export class RemoveAccountComponent implements OnInit {
     private fb : FormBuilder,
     private dashboardService: DashboardService,
     private router: Router,
-    private activated : ActivatedRoute
+    private activated : ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ){
     this.removeForm = this.fb.group({
       email:['']
@@ -38,17 +43,15 @@ export class RemoveAccountComponent implements OnInit {
   onRemoveAccount(){
     const token = localStorage.getItem('token')
     if(!token){
-      console.error('Failed to Fetch Remove Account');
       this.router.navigate(['/'])
     }
     if(token){
       if(window.confirm('Are You Sure!, You Want To Delete Your Account')){
         this.dashboardService.removeAccount(this.id,this.email,this.password,this.removeForm.value).subscribe((res) => {
-          console.log("Remove Account :", res)
           this.router.navigate(['/']);
         },
         (error) =>{
-          console.error(error)
+          throw error;
         } )
       }
     }
@@ -56,9 +59,21 @@ export class RemoveAccountComponent implements OnInit {
   }
 
   deleteAccount(){
-    if(window.confirm('Do You Want To Cancel')){
-      this.removeForm.reset();
-      this.router.navigate(['/profile'])
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '300px',
+      data: { message: 'Do you want to discard your account?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.removeForm.reset();
+        this.snackBar.open('Account has been discarded', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        });
+        this.router.navigate(['/profile']);
+      }
+    });
   }
 }

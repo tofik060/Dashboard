@@ -1,4 +1,4 @@
-import { Component, Input, inject,OnInit } from '@angular/core';
+import { Component, Input, inject,OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   templateUrl: './app-nav.component.html',
   styleUrls: ['./app-nav.component.css']
 })
-export class AppNavComponent implements OnInit {
+export class AppNavComponent implements OnInit, OnDestroy {
   // userName: user[] = [
   //   {
   //     Name: "Jack",
@@ -37,28 +37,73 @@ export class AppNavComponent implements OnInit {
 
   userForm : any =[]
   user: any;
+  isLoading: boolean = true;
+  isPinned: boolean = false;
+  private dataTimeout: any;
+  private subscription: any;
+  
   constructor(
     private dashboardService : DashboardService,
     private router : Router
   ){}
-    ngOnInit(): void {
-      this.dashboardService.userData.subscribe((res) =>{
-        this.user = res
-      // console.log("Profile User", this.user)
-      })
-      // const token = localStorage.getItem('token');
-      // if(!token){
-      //   console.error("Failed to fatch Profile ")
-      //   this.router.navigate(['/'])
-      // }
-      // if(token){
-      //   this.dashboardService.profileAll(token).subscribe(
-      //     (res) => {
-      //       console.log(res);
-      //       this.userForm = res;
-      //     }
-      //   )  
-      // }
   
+  get isLoggedIn(): boolean {
+    const token = localStorage.getItem('token');
+    return !!(this.user && this.user.token) || !!token;
+  }
+  
+  ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    
+    // Check if user data is already available (from localStorage)
+    const currentUser = this.dashboardService.userData.value;
+    if (currentUser && currentUser._id && currentUser._id !== '') {
+      this.user = currentUser;
+      this.isLoading = false;
+      return;
     }
+
+    // Only show loader and set timeout if there's a token (user should be logged in)
+    if (token) {
+      // Set timeout to refresh page if data doesn't come within 2 seconds
+      this.dataTimeout = setTimeout(() => {
+        if (this.isLoading) {
+          // Data hasn't loaded within 2 seconds, refresh the page
+          window.location.reload();
+        }
+      }, 2000);
+    } else {
+      // No token, no need to wait for user data
+      this.isLoading = false;
+    }
+
+    // Subscribe to user data
+    this.subscription = this.dashboardService.userData.subscribe((res) => {
+      // Check if we have valid user data (not empty/default)
+      if (res && res._id && res._id !== '') {
+        this.user = res;
+        this.isLoading = false;
+        // Clear timeout since data has arrived
+        if (this.dataTimeout) {
+          clearTimeout(this.dataTimeout);
+        }
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.dataTimeout) {
+      clearTimeout(this.dataTimeout);
+    }
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  togglePin(drawer: any): void {
+    this.isPinned = !this.isPinned;
+    if (this.isPinned) {
+      drawer.open();
+    }
+  }
 }

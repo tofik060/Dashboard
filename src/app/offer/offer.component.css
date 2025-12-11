@@ -1,8 +1,33 @@
-.cardFirst {
+.cardFirst,
+.cardSecond,
+.cardThird,
+.cardFourth,
+.cardFifth,
+.cardSixth {
     height: 186px;
-    width: 325px;
+    min-height: 186px;
     background: linear-gradient(to right, #831370 0%, #ff99cc 100%);
     color: white;
+}
+
+.cardSecond {
+    background: linear-gradient(to right, #0e287c 0%, #99d1ff 100%);
+}
+
+.cardThird {
+    background: linear-gradient(to right, #64dbaa 0%, #b0d1ec 100%);
+}
+
+.cardFourth {
+    background: linear-gradient(to right, #dfd07a 0%, #b9702c 100%);
+}
+
+.cardFifth {
+    background: linear-gradient(to right, #4dd354 0%, #c8e06e 100%);
+}
+
+.cardSixth {
+    background: linear-gradient(to right, #ca4784 0%, #da0000 100%);
 }
 
 .ulcardFirst {
@@ -10,11 +35,12 @@
     display: flex;
     margin-bottom: 24px;
     font-size: 25px;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .lidiscount {
     margin-top: 10px;
-    margin-right: 80px;
 }
 
 .licardFirst {
@@ -22,56 +48,9 @@
     margin-bottom: 10px;
 }
 
-.cardSecond {
-    height: 186px;
-    width: 325px;
-    background: linear-gradient(to right, #0e287c 0%, #99d1ff 100%);
-    color: white;
-}
-
-.ulcardSecond {
-    list-style-type: none;
-    display: flex;
-    margin-bottom: 24px;
-    font-size: 25px;
-}
-
-.licashback {
-    margin-top: 10px;
-    margin-right: 80px;
-}
-
-.licardSecond {
-    font-size: 33px;
-    margin-bottom: 10px;
-}
-
-.cardThird {
-    height: 186px;
-    width: 325px;
-    background: linear-gradient(to right, #64dbaa 0%, #b0d1ec 100%);
-    color: white;
-}
-
-.cardFourth {
-    height: 186px;
-    width: 325px;
-    background: linear-gradient(to right, #dfd07a 0%, #b9702c 100%);
-    color: white;
-}
-
-.cardFifth {
-    height: 186px;
-    width: 325px;
-    background: linear-gradient(to right, #4dd354 0%, #c8e06e 100%);
-    color: white;
-}
-
-.cardSixth {
-    height: 186px;
-    width: 325px;
-    background: linear-gradient(to right, #ca4784 0%, #da0000 100%);
-    color: white;
+.cardInfo {
+    height: 75px;
+    min-height: 75px;
 }
 
 .cardDiv {
@@ -81,4 +60,35 @@
     margin-left: -31px;
     margin-bottom: 8px;
     margin-top: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .ulcardFirst {
+        font-size: 22px;
+    }
+    
+    .licardFirst {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .ulcardFirst {
+        font-size: 20px;
+    }
+    
+    .licardFirst {
+        font-size: 24px;
+    }
+    
+    .cardFirst,
+    .cardSecond,
+    .cardThird,
+    .cardFourth,
+    .cardFifth,
+    .cardSixth {
+        height: auto;
+        min-height: 186px;
+    }
 }

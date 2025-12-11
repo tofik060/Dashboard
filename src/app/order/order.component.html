@@ -1,56 +1,102 @@
-<div>
-  <div class="container my-4" style="    
-  display: flex;
-  border-bottom: 2px solid;
-  font-size: 18px;">
-    <div class="px-4"> <a class="order" >Order</a> </div>
-    <div> <a class="cancel" >Cancellation</a> </div>
+<div class="container-fluid">
+  <div
+    class="container-fluid my-4"
+    style="display: flex; border-bottom: 2px solid; font-size: 18px"
+  >
+    <div class="px-4"><a class="order">Order</a></div>
+    <div><a class="cancel">Cancellation</a></div>
   </div>
   <div>
-    <h1 class="my-3 mx-2 px-3 bg-light border-light  rounded-2 ">Your Orders</h1>
-   <!-- <input class="form-control" type="text" [(ngModel)]="itemName" 
-   placeholder="Item Name">-->
+    <h1 class="my-3 mx-2 px-3 bg-light border-light rounded-2">Your Orders</h1>
   </div>
-  <div class="d-flex my-3 mx-2" >
-    <input class="form-control" #searchInput style="width: 20%;" type="text" [(ngModel)]="searchQuery" (input)="search()" placeholder="Search">
-    <button class="btn btn-success mx-1" (click)="toggleSearch()" >Search</button> 
-    <!-- searchInput.value -->
+  <div class="d-flex my-3 mx-2">
+    <input
+      class="form-control"
+      #searchInput
+      style="width: 20%"
+      type="text"
+      [(ngModel)]="searchQuery"
+      (input)="search()"
+      placeholder="Search"
+    />
+    <button class="btn btn-success mx-1" (click)="toggleSearch()">
+      Search
+    </button>
   </div>
-  
-<div *ngIf="searchVisible" class="container-fluid my-3">
-    <table class="table text-center">
+
+  <div *ngIf="searchVisible" class="container-fluid my-3">
+    <table class="table text-center custom-table">
       <tr>
         <th>Order</th>
+        <th>Product Code</th>
         <th>Item Name</th>
         <th>Quantity</th>
-        <th>Product Code</th>
-        <th>Order Date</th>
+        <th>Original Price</th>
         <th>Price</th>
-        <th>Order Cancel</th>
+        <th>Order Date</th>
+        <th>Order Cancel Date</th>
+        <th>Order Status</th>
+        <th>Customer View</th>
+        <th>Action</th>
       </tr>
-      <tr *ngFor="let  order of  orderList ; let i = index">
+      <tr *ngFor="let order of orderList; let i = index">
         <td>
-          {{ i+1 }}
+          {{ i + 1 }}
         </td>
         <td>
-          {{ order.itemName}}
+          {{ order.productCode }}
         </td>
         <td>
-          {{ order.quantity}}
+          {{ order.itemName }}
         </td>
         <td>
-          {{ order.productCode}}
+          {{ order.quantity }}
         </td>
         <td>
-          {{ order.orderDate}}
+          {{ order.actualPrice }}
         </td>
         <td>
-          {{ order.price}}
-        </td> <td>
-          <button class="btn btn-danger" routerLink="/cancellation/{{order._id}}">Order Cancel</button>
+          {{ order.price }}
+        </td>
+        <td>
+          {{ order.orderDate }}
+        </td>
+        <td>
+          {{ order.orderCancelDate ? order.orderCancelDate : '-' }}
+        </td>
+        <td style="padding-left: 8px;padding-right: -2px; text-align: left;">
+          <span class="status-indicator" [ngClass]="getStatusClass(order.orderStatus)"></span>
+          {{ order.orderStatus }}
+        </td>
+        <td>
+          <button mat-icon-button class="view-btn" type="button" (click)="customerView(order._id)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </td>
+        <td>
+          <div *ngIf="!order.orderCancelDate && order.orderStatus === 'Pending'" class="action-buttons">
+            <button
+              mat-icon-button
+              class="approve-btn"
+              type="button"
+              (click)="onApprove(order._id,'Completed')"
+              matTooltip="Approve Order"
+            >
+              <mat-icon>check</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              class="cancel-btn"
+              type="button"
+              routerLink="/cancellation/{{ order._id }}"
+              matTooltip="Cancel Order"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <span style="background: none;" *ngIf="order.orderCancelDate || order.orderStatus !== 'Pending'">--</span>
         </td>
       </tr>
     </table>
-
   </div>
 </div>

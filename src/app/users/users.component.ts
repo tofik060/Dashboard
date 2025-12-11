@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { user } from './user';
 import { DashboardService } from '../services/dashboard.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -27,23 +25,16 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
+    const userInfoStr = localStorage.getItem('userInfo');
     if(!token){
-      console.error("Failed to fatch Profile ")
       this.router.navigate(['/'])
     }
-    if(token){
-      this.dashboardService.userData.subscribe((res) =>{
+    if(token && userInfoStr){
+      const userInfo = JSON.parse(userInfoStr);
+      this.dashboardService.profile(userInfo?._id).subscribe((res) =>{
         this.user = res
-      //console.log("Component Profile User", this.user)
       })
       this.dashboardService.Login();
-
-      // this.dashboardService.profileAll().subscribe(
-      //   (res) => {
-      //     console.log(res);
-      //     this.userForm = res;
-      //   }
-      // );
     }
 
   }

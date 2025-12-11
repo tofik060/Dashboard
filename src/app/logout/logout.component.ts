@@ -19,19 +19,10 @@ export class LogoutComponent implements OnInit {
     ngOnInit(): void {
       const token = localStorage.getItem('token');
       if(!token){
-        console.error("Failed to fatch logout ")
         this.router.navigate(['/'])
       }
       if(token){
         this.dashboardService.logout()
-        // .subscribe(
-        //   (response) => {
-        //     this.user = response;
-        //     localStorage.removeItem('token');
-        //     console.log("Logout Successfully");
-        //     this.router.navigate(['/'])
-        //   }
-        // )
       }else{
         this.router.navigate(['/'])
       }

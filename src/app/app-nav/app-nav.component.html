@@ -3,20 +3,33 @@
     #drawer
     class="sidenav"
     fixedInViewport
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(isHandset$ | async) === false"
+    role="navigation"
+    mode="side"
+    [opened]="isPinned"
   >
-    <mat-toolbar
-      ><a class="navA" routerLink="home"
-        ><img
-          class="rounded-circle"
-          style="width: 30px; height: 30px"
-          src="../../assets/shoppingicon.jpeg"
-          alt=""
-        />
-        shopping</a
-      >
+    <mat-toolbar>
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <a routerLink="home" style="display: flex; align-items: center; gap: 8px; text-decoration: none;color: white;"
+          ><img
+            class="rounded-circle"
+            style="width: 30px; height: 30px"
+            src="../../assets/icon/icon.jpeg"
+            alt=""
+          />
+          E-Mart</a
+        >
+        <button
+          *ngIf="isLoggedIn"
+          type="button"
+          aria-label="Pin sidenav"
+          mat-icon-button
+          (click)="togglePin(drawer)"
+          [matTooltip]="isPinned ? 'Unpin sidebar' : 'Pin sidebar'"
+          [class.pinned]="isPinned"
+        >
+          <mat-icon aria-label="Pin icon">{{ isPinned ? 'radio_button_checked' : 'radio_button_unchecked' }}</mat-icon>
+        </button>
+      </div>
     </mat-toolbar>
     <mat-divider></mat-divider>
     <h3>
@@ -37,49 +50,35 @@
         ><mat-icon>shopping_cart</mat-icon> Order</a
       >
       <a mat-list-item routerLink="offer"><mat-icon>cloud</mat-icon> Offer</a>
-      <mat-divider class="mat-divider1"></mat-divider>
-      <a mat-list-item routerLink="profile"
-        >	<mat-icon>account_circle</mat-icon> Profile</a
-      >
-      <a mat-list-item routerLink="registration"
-        ><mat-icon>assignment</mat-icon> Register</a
-      >
-      <a mat-list-item routerLink=""><mat-icon>login</mat-icon> Login</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
       <mat-toolbar-row class="justify-content-between">
-        <button
-          type="button"
-          aria-label="Toggle sidenav"
-          mat-icon-button
-          (click)="drawer.toggle()"
-          *ngIf="isHandset$ | async"
-        >
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-        </button>
-        <span
-          ><a class="navA" routerLink="home"
-            ><img
-              class="rounded-circle"
-              style="width: 30px; height: 30px"
-              src="../../assets/shoppingicon.jpeg"
-              alt=""
-            />
-            shopping</a
+        <div style="display: flex; align-items: center;">
+          <button
+            *ngIf="isLoggedIn"
+            type="button"
+            aria-label="Toggle sidenav"
+            mat-icon-button
+            (click)="drawer.toggle()"
           >
-        </span>
+            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+          </button>
+          <span style="margin-left: 8px;"
+            ><a class="navA" routerLink="home" style="display: flex; align-items: center; gap: 8px;"
+              ><img
+                class="rounded-circle"
+                style="width: 30px; height: 30px"
+                src="../../assets/icon/icon.jpeg"
+                alt=""
+              />
+              E-Mart</a
+            >
+          </span>
+        </div>
         <div class="row mr-2 ml-auto">
           <ol>
-            <li>
-              <input
-                class="form-control"
-                type="text"
-                placeholder="search for..."
-                aria-label="search"
-              />
-            </li>
             <li>
               <button
                 mat-button
@@ -88,32 +87,33 @@
               >
                 <img
                   class="rounded-circle"
-                  src="../../assets/profile.jpg"
+                  [src]="user && user.image ? 'http://localhost:9000/' + user.image : '../../assets/profile.jpg'"
                   alt=""
                   style="width: 30px; height: 30px"
                 />
-                <!--User Name-->
-                <!-- {{ user ? user.name : "User name" }} -->
                 <mat-icon class="user-image-icon">keyboard_arrow_down</mat-icon>
               </button>
-              <mat-menu #menu="matMenu">
-                <!-- <button mat-list-item type="button" routerLink="/logout">
-                  <a routerLink="/logout" style="text-decoration: none;color: black;">
-                    <mat-icon>exit_to_app</mat-icon>
-                    logout
-                  </a>
-                </button> -->
-                <a routerLink="/profile" style="text-decoration: none;color: black; margin: 10px 10px;">
-                  <mat-icon>account_circle</mat-icon>
-                  Profile
+              <mat-menu #menu="matMenu" class="mt-2">
+                <div *ngIf="isLoggedIn" style="padding: 16px; min-width: 200px;">
+                  <div style="font-weight: 500; margin-bottom: 4px; color: #333;">
+                    <mat-icon style="margin-bottom: -2px;" class="detail-icon">person</mat-icon>
+                    {{ user ? user.name : "User Name" }}
+                  </div>
+                  <div style="font-size: 12px; color: #666;">
+                    <mat-icon style="margin-bottom: -2px;" class="detail-icon">email</mat-icon>&nbsp;{{ user ? user.email : "user@email.com" }}
+                  </div>
+                </div>
+                <hr style=" margin: 8px 8px;" *ngIf="isLoggedIn">
+                <a routerLink="/profile" *ngIf="isLoggedIn" style="text-decoration: none;color: black; margin: 10px 10px;">
+                  <mat-icon style="margin-bottom: -2px;" class="detail-icon">account_circle</mat-icon>
+                  View Profile
                 </a>
-                <!-- <hr style=" margin: 10px 10px;">
-                <a routerLink="" style="text-decoration: none;color: black; margin: 10px 10px;">
-                  <mat-icon>login</mat-icon> Login
-                </a> -->
-                <hr style=" margin: 10px 10px;">
-                <a routerLink="/logout" style="text-decoration: none;color: black; margin: 10px 10px;">
-                  <mat-icon>exit_to_app</mat-icon>
+                <a routerLink="" *ngIf="!isLoggedIn" style="text-decoration: none;color: black; margin: 10px 10px;">
+                  <mat-icon style="margin-bottom: -2px;" class="detail-icon">login</mat-icon> Login
+                </a>
+                <hr style=" margin: 8px 8px;" *ngIf="isLoggedIn">
+                <a routerLink="/logout" *ngIf="isLoggedIn" style="text-decoration: none;color: black; margin: 10px 10px;">
+                  <mat-icon style="margin-bottom: -2px;" class="detail-icon">exit_to_app</mat-icon>
                   logout
                 </a>
               </mat-menu>
@@ -124,6 +124,12 @@
     </mat-toolbar>
     <mat-divider></mat-divider>
     <!-- Add Content Here -->
-    <router-outlet></router-outlet>
+    <div *ngIf="isLoading" class="loader-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading...</p>
+    </div>
+    <div *ngIf="!isLoading">
+      <router-outlet></router-outlet>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

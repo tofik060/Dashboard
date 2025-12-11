@@ -70,5 +70,35 @@ li {
   height: 22px;
 }
 
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 64px);
+  width: 100%;
+}
+
+.loader-container p {
+  margin-top: 16px;
+  font-size: 16px;
+  color: #666;
+}
+
+button[aria-label="Pin sidenav"] mat-icon.rotated {
+  transform: rotate(45deg);
+}
+
+button[aria-label="Pin sidenav"].pinned mat-icon {
+  color: #4caf50;
+}
+
+.sidenav .mat-toolbar button[aria-label="Pin sidenav"].pinned mat-icon {
+  color: #4caf50;
+}
+
+.sidenav .mat-toolbar button[aria-label="Pin sidenav"] mat-icon {
+  color: white;
+}
 
  

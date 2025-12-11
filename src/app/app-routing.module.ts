@@ -1,10 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { AppNavComponent } from './app-nav/app-nav.component';
-import { SidenavComponent } from './sidenav/sidenav.component';
-import { SettingComponent } from './setting/setting.component';
 import { ProductsComponent } from './products/products.component';
 import { CategoryComponent } from './category/category.component';
 import { OrderComponent } from './order/order.component';
@@ -17,37 +13,29 @@ import { RegisterComponent } from './register/register.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { OrderRegisterComponent } from './order-register/order-register.component';
 import { LogoutComponent } from './logout/logout.component';
-import { SearchComponent } from './search/search.component';
 import { RemoveAccountComponent } from './remove-account/remove-account.component';
 import { ForgetPasswordComponent } from './forget-password/forget-password.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
-
-
-
-
 const routes: Routes = [
- // { path: '', redirectTo: '/home', pathMatch: 'full' },
   {path:'',component:LoginComponent},
-  {path : 'home',component:HomeComponent},
-  {path:'products',component:ProductsComponent}, //,canActivate:[loginGuard]
-  {path:'category',component:CategoryComponent},
-  {path:'order',component:OrderComponent},
-  {path:'cancellation/:id',component: CancellationComponent},
-  {path:'offer',component:OfferComponent},
-  {path:'profile',component:UsersComponent},
+  {path : 'home',component:HomeComponent,canActivate:[loginGuard]},
+  {path:'products',component:ProductsComponent,canActivate:[loginGuard]},
+  {path:'category',component:CategoryComponent,canActivate:[loginGuard]},
+  {path:'order',component:OrderComponent,canActivate:[loginGuard]},
+  {path:'cancellation/:id',component: CancellationComponent,canActivate:[loginGuard]},
+  {path:'offer',component:OfferComponent,canActivate:[loginGuard]},
+  {path:'profile',component:UsersComponent,canActivate:[loginGuard]},
+  {path:'profile-edit/:id',component:EditUserComponent,canActivate:[loginGuard]},
+  {path:'order-details/:id',component:OrderRegisterComponent,canActivate:[loginGuard]},
+  {path:'remove-account/:id', component: RemoveAccountComponent,canActivate:[loginGuard]},
+  {path:'change-password/:id', component:ChangePasswordComponent,canActivate:[loginGuard]},
+  {path:'reset-password/:id/:token', component:ResetPasswordComponent,canActivate:[loginGuard] },
+  {path:'logout',component:LogoutComponent,canActivate:[loginGuard]},
+  
   {path:'registration',component:RegisterComponent},
-  {path:'profile-edit/:id',component:EditUserComponent},
-  {path:'order-details/:id',component:OrderRegisterComponent},
-  {path:'remove-account/:id', component: RemoveAccountComponent},
   {path:'forget-password', component:ForgetPasswordComponent},
-  {path:'change-password/:id', component:ChangePasswordComponent},
-  {path:'reset-password/:id/:token', component:ResetPasswordComponent },
-  {path:'logout',component:LogoutComponent},
-  //{path:'search/:query',component:SearchComponent},
-  // {path:'dashboard',component:DashboardComponent},
-  // {path:'setting',component:SettingComponent},
  
 ];
 

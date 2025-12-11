@@ -10,12 +10,15 @@ const path = require('path')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
-app.use(cors());
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")))
-app.use('/uploads',express.static(path.join(__dirname, 'uploads')))
+app.use(cors({
+    origin: "http://localhost:4200",
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
-//console.log(path.join(__dirname, "./uploads"))
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
+app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
 
 const router = require('./routes/router')
 app.use('/api', router)
@@ -30,9 +33,13 @@ app.get('/',(req, res) => {
 
 // Error Handle
 
-app.use(function(err, req, res, next){
-    console.err(err.message);
-    res.send(err.message);
-    if(!err.message) err.statusCode = 500;
-    res.status(err.statusCode).send(err.message)
-})
+app.use((err, req, res, next) => {
+    console.error("Error:", err.message);
+
+    if (!err.statusCode) err.statusCode = 500;
+
+    res.status(err.statusCode).json({
+        success: false,
+        message: err.message
+    });
+});

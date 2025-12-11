@@ -25,8 +25,8 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   phone: {
-    type: String,
-    unique: [true,'Please enter the name of your product']
+    type: Number,
+    unique: [true,'Please enter your phone number']
   },
   image:{
     type: String
@@ -44,10 +44,22 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.generateAuthToken = async function(){
   try {
-        console.log("UserSchema Id",this._id);
-        const token = jwt.sign({_id: this._id}, process.env.SECRET_KEY,);
+        // 7 days in seconds: 7 * 24 * 60 * 60 = 604800
+        const expirationSeconds = 604800; // 7 days
+        const token = jwt.sign({_id: this._id}, process.env.SECRET_KEY, {
+          expiresIn: expirationSeconds
+        });
+        
+        // Verify the token expiration was set correctly
+        const decoded = jwt.decode(token);
+        if (decoded && decoded.exp) {
+          const expirationDate = new Date(decoded.exp * 1000);
+          const now = new Date();
+          const hoursUntilExpiry = (decoded.exp * 1000 - now.getTime()) / (1000 * 60 * 60);
+          console.log(`[Token Generation] New token created - expires in: ${hoursUntilExpiry.toFixed(2)} hours (at ${expirationDate.toISOString()})`);
+        }
+        
         this.tokens = this.tokens.concat({token: token}) ;
-        //  console.log('Token',token );
         await this.save();
         return token;
   } catch (error) {
@@ -65,7 +77,7 @@ userSchema.pre("save", async function (next) {
     this.confirmPassword = await bcrypt.hash(this.confirmPassword, 10);
   }
   next();
-}); 
+});  
 
 const User = new mongoose.model("User", userSchema);
 

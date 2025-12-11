@@ -14,3 +14,14 @@
     color: black;
     border-bottom: 2px solid blue;
 }
+
+.reg-div{
+    width: 50% !important;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .reg-div{
+        width: 100% !important;
+    }
+}

@@ -1,7 +1,10 @@
 import { Component,OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Route, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { DashboardService } from '../services/dashboard.service';
+import { ConfirmDialogComponent } from '../order-register/confirm-dialog.component';
 
 @Component({
   selector: 'app-cancellation',
@@ -11,25 +14,20 @@ import { DashboardService } from '../services/dashboard.service';
 export class CancellationComponent implements OnInit {
 
   cancellationForm! : FormGroup;
-//orderListForm! : FormGroup;
   id:any
 
   constructor(
     private fb : FormBuilder, 
     private router: Router,
     private dashboardService : DashboardService,
-    private activated: ActivatedRoute) {}
+    private activated: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog) {}
  
 
   ngOnInit(): void {   
-    
-    //const cancellationForm: FormGroup = new FormGroup({
-    // 
-    //});
-    //console.log(cancellationForm)
-
     this.cancellationForm = this.fb.group({
-      name: new FormControl('',[Validators.required,Validators.minLength(10)]),
+      name: new FormControl('',[Validators.required]),
       itemName: ['',[Validators.required]],
       productCode: ['',[Validators.required]],
       orderDate: ['',[Validators.required]],
@@ -40,7 +38,7 @@ export class CancellationComponent implements OnInit {
     });
 
     this.id = this.activated.snapshot.paramMap.get('id');
-    this.dashboardService.productId(this.id).subscribe(
+    this.dashboardService.orderId(this.id).subscribe(
       ( response ) => {
         this.cancellationForm.patchValue(response)
       }
@@ -49,35 +47,48 @@ export class CancellationComponent implements OnInit {
   }
 
   onSubmit() {
-    this.dashboardService.productUpdateId(this.id,this.cancellationForm.value).subscribe(
-      (response) => {
-        console.log("Order Update Successfully!",response);
-        this.router.navigate(['/order'])
-      },
-      (error) => {
-        console.error(error) 
-      }
-    )
-
     if (this.cancellationForm.valid) {
+      const cancelDate = this.cancellationForm.get('cancelDate')?.value
       this.dashboardService.cancelUser(this.cancellationForm.value).subscribe(
         (res) => {
-          console.log(res);
-          //this.cancellationForm.reset();
-          this.router.navigate(['/order'])
+          this.dashboardService.orderUpdateId(this.id, {cancelDate: cancelDate, orderStatus: 'Cancelled'}).subscribe(
+            (response) => {
+              this.snackBar.open('Cancellation submitted successfully', 'Close', {
+                duration: 3000,
+                horizontalPosition: 'end',
+                verticalPosition: 'top'
+              });
+              this.router.navigate(['/order'])
+            },
+            (error) => {
+              throw error;
+            }
+          )
         },
         (error) => {
-          console.error(error)
+          throw error;
         }
       )
     }
   }
 
   reset(){
-    if(window.confirm("Do you want to Cancle Your Order")){
-      this.cancellationForm.reset();
-      this.router.navigate(['/order'])
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '300px',
+      data: { message: 'Do you want to Cancel Your Order?' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.cancellationForm.reset();
+        this.snackBar.open('Order has been cancelled', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        });
+        this.router.navigate(['/order']);
+      }
+    });
   }
   
 }

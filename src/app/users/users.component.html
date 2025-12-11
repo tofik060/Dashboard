@@ -1,112 +1,76 @@
-<!-- <div class="container fluid my-3">
-<h1 class="my-3 px-3 bg-light border-light  rounded-2 ">User Personal Details</h1> 
-<div class="card">
-    <div class="row px-2 py-2">
-        <div class="col-xl-3">
-            <img src="../../assets/tshirt.jpg" alt="">
+<div class="d-flex justify-content-center responsive-container">
+  <div class="container-fluid col-12 col-md-10 col-lg-8 col-xl-6">
+    <h1 class="my-3 px-3 bg-light border-light rounded-2">
+      User Personal Details
+    </h1>
+    <div class="card">
+      <div class="row px-2 py-2">
+        <div class="col-12 col-md-4 text-center mb-3 mb-md-0" style="padding-top: 24px">
+          <img
+            src="http://localhost:9000/{{
+              user ? user.image : '../../assets/profile.jpg'
+            }}"
+            alt="Profile Picture"
+            class="profile-avatar"
+          />
         </div>
-        <div class="col-xl-9"  >
-            <ul *ngFor="let user of userForm">
-                <li>Name : {{user.name}} </li>
-                <li>Email Id : {{user.email}} </li>
-                <li>Phone Number : {{user.phone}} </li>
-                <li><button class="btn btn-primary" routerLink="/profile-edit/{{user._id}}" [queryParams]="{EditMode: true}">Edit</button></li>
-            </ul>
+        <div class="col-12 col-md-8">
+          <table>
+            <tr>
+              <td>Name :</td>
+              <td>
+                {{ user ? user.name : "User name" }}
+              </td>
+            </tr>
+            <tr>
+              <td>Email Id :</td>
+              <td>
+                {{ user ? user.email : "User email" }}
+              </td>
+            </tr>
+            <tr>
+              <td>Phone Number :</td>
+              <td>
+                {{ user ? user.phone : "User phone" }}
+              </td>
+            </tr>
+            <tr>
+              <td>Location :</td>
+              <td>
+                {{ user ? user.location : "User location" }}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <button
+                  class="btn btn-primary"
+                  routerLink="/profile-edit/{{ user ? user._id : '' }}"
+                  [queryParams]="{ EditMode: true }"
+                >
+                  Edit
+                </button>
+              </td>
+              <td></td>
+            </tr>
+          </table>
         </div>
-    </div>
-</div>
-</div>  -->
-
-<div class="container fluid my-3">
-  <h1 class="my-3 px-3 bg-light border-light rounded-2">
-    User Personal Details
-  </h1>
-  <div class="card">
-    <div class="row px-2 py-2">
-      <div class="col-xl-3" style="padding-top: 24px">
-        <img
-          src="http://localhost:9000/{{
-            user ? user.image : '../../assets/profile.jpg'
-          }}"
-          alt=""
-          style="width: 203px; margin-left: 23px"
-        />
-      </div>
-      <div class="col-xl-6">
-        <table>
-          <tr>
-            <td>Name :</td>
-            <td>
-              {{ user ? user.name : "User name" }}
-            </td>
-          </tr>
-          <tr>
-            <td>Email Id :</td>
-            <td>
-              {{ user ? user.email : "User email" }}
-            </td>
-          </tr>
-          <tr>
-            <td>Phone Number :</td>
-            <td>
-              {{ user ? user.phone : "User phone" }}
-            </td>
-          </tr>
-          <tr>
-            <td>Location :</td>
-            <td>
-              {{ user ? user.location : "User location" }}
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <button
-                class="btn btn-primary"
-                routerLink="/profile-edit/{{ user ? user._id : '' }}"
-                [queryParams]="{ EditMode: true }"
-              >
-                Edit
-              </button>
-            </td>
-            <td></td>
-          </tr>
-        </table>
-        <!-- <ul>
-          <li>Name : {{ user ? user.name : "User name" }}</li>
-          <li>Email Id : {{ user ? user.email : "User email" }}</li>
-          <li>Phone Number : {{ user ? user.phone : "User phone" }}</li>
-          <li>Location : {{ user ? user.location : "User location" }}</li>
-          // Token Comment
-           <li>Token : {{user? user.token:'User token'}} </li>  
-          <li>
+        <div class="col-12 my-3 text-center">
+          <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-2">
             <button
-              class="btn btn-primary"
-              routerLink="/profile-edit/{{ user ? user._id : '' }}"
-              [queryParams]="{ EditMode: true }"
+              class="btn btn-danger w-100 w-sm-auto"
+              style="min-width: 147px;"
+              routerLink="/remove-account/{{ user ? user._id : '' }}"
             >
-              Edit
+              Remove Account
             </button>
-          </li>
-        </ul> -->
-      </div>
-      <div class="col-xl-3 my-3 text-center">
-        <div>
-          <button
-          class="btn btn-danger"
-          style="width: 147px;"
-          routerLink="/remove-account/{{ user ? user._id : '' }}"
-        >
-          Remove Account
-        </button>
-        </div>
-        <div>
-          <button
-          class="btn  my-1 btn-success" 
-          style="width: 147px;font-size: 15px;"
-          routerLink="/change-password/{{ user ? user._id : '' }}"
-        >
-          Change Password
-        </button>
+            <button
+              class="btn btn-success w-100 w-sm-auto" 
+              style="min-width: 147px; font-size: 15px;"
+              routerLink="/change-password/{{ user ? user._id : '' }}"
+            >
+              Change Password
+            </button>
+          </div>
         </div>
       </div>
     </div>

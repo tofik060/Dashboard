@@ -4,35 +4,35 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse,
   HttpHeaders,
 } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
-import { DashboardService } from './services/dashboard.service';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class RequestInterceptor implements HttpInterceptor {
-  constructor(private dashboardService: DashboardService) {}
+  constructor() {}
 
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('token');
-    console.log('Request Interceptor', request);
-    //return next.handle(request)
+intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  const token = localStorage.getItem('token');
 
-    if (token) {
-      // request = request.clone({
-      //   setHeaders: {
-      //     Authorization: token
-      //   }
-      // });
-      const newReq = request.clone({
-        headers: new HttpHeaders({ Authorization:  token }),
-      });
-      return next.handle(newReq);
-    }
+  // Skip token for registration and POST login (actual login request)
+  // But allow token for GET login (which requires authentication)
+  const isPostLogin = request.method === 'POST' && request.url.includes('/login');
+  const isRegistration = request.url.includes('/registration');
+  
+  if (isRegistration || isPostLogin) {
     return next.handle(request);
   }
+
+  if (token) {
+    request = request.clone({
+      setHeaders: {
+        Authorization: token
+      }
+    });
+  }
+
+  return next.handle(request);
+}
+
 }

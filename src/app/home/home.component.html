@@ -3,119 +3,153 @@
     <h1>
       Hi, Welcome back!
     </h1>
-    Your shopping dashboard template
+    Your Shopping Dashboard
   </div>
-  <div class="container-fluid my-4  ">
-    <table class="hometable">
-      <tr>
-        <td class="bir">
-          Category
-          <hr>
-          <a routerLink="/category"> View Details</a>
-          <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
-        </td>
-        <td class="com">
-          Deals
-          <hr>
-          <a routerLink="/offer"> View Details</a>
-          <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
-        </td>
-        <td class="Qui">
-          Sell
-          <hr>
-          <a routerLink="/offer"> View Details</a>
-          <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
-        </td>
-        <td class="hol">
-          Customer Service
-          <hr>
-          <a routerLink="/users"> View Details</a>
-          <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
-        </td>
-      </tr>
-    </table>
+  <div class="container-fluid my-4">
+    <div class="dashboard-cards">
+      <div class="dashboard-card bir">
+        Category
+        <hr>
+        <a routerLink="/category"> View Details</a>
+        <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
+      </div>
+      <div class="dashboard-card com">
+        Deals
+        <hr>
+        <a routerLink="/offer"> View Details</a>
+        <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
+      </div>
+      <div class="dashboard-card Qui">
+        Sell
+        <hr>
+        <a routerLink="/offer"> View Details</a>
+        <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
+      </div>
+      <div class="dashboard-card hol">
+        Customer Service
+        <hr>
+        <a routerLink="/users"> View Details</a>
+        <mat-icon class="Arrow">keyboard_arrow_right</mat-icon>
+      </div>
+    </div>
   </div>
-  <div class="container-fluid my-4  ">
-    <table class="graphtable">
-      <tr>
-        <td>
-          <div class="weekend my-4 ">
-            <p class="pweek">
-              <mat-icon class="asse">assessment</mat-icon>
-              Weekly Analysis
-            </p>
-
-            <img class="weekimg" src="../../assets/weekend.png">
-
-          </div>
-        </td>
-        <td>
-          <div class="monthly my-4 ">
-            <p class="pmonthly">
-              <mat-icon class="asse">assessment</mat-icon>
-              Monthly Report
-            </p>
-            <img src="../../assets/monthly.png" class="monthlyimg">
-          </div>
-        </td>
-      </tr>
-    </table>
+  <div class="container-fluid my-4">
+    <div class="graph-container">
+      <div class="weekend my-4">
+        <p class="pweek">
+          <mat-icon class="asse">assessment</mat-icon>
+          Weekly Analysis
+        </p>
+        <div class="chart-container" style="height: 300px; position: relative;">
+          <canvas baseChart
+            [data]="weeklyChartData"
+            [type]="weeklyChartType"
+            [options]="weeklyChartOptions">
+          </canvas>
+        </div>
+      </div>
+      <div class="monthly my-4">
+        <p class="pmonthly">
+          <mat-icon class="asse">assessment</mat-icon>
+          Monthly Report
+        </p>
+        <div class="chart-container" style="height: 300px; position: relative;">
+          <canvas baseChart
+            [data]="monthlyChartData"
+            [type]="monthlyChartType"
+            [options]="monthlyChartOptions">
+          </canvas>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="emp my-4 ">
+  <div class="emp my-4">
     <div class="pemp">
-      <table width="100%">
-        <tr>
-          <td>
-            <p>
-              ACTIVE OEDERS
-            </p>
-          </td>
-          <td class="inputQuantity">
-            <div class="container-fluid">
-              <input class="form-control" type="number" [(ngModel)]=" quantity" [formControl]=" quantityFilter"
-                placeholder="Search  Quantity">
-            </div>
-          </td>
-        </tr>
-      </table>
-
-
+      <div class="table-header">
+        <p class="table-title">ORDER LIST</p>
+        <div class="inputQuantity">
+          <input class="form-control" type="text" [(ngModel)]="searchText" [formControl]="searchFilter"
+            placeholder="Search">
+        </div>
+      </div>
     </div>
 
-    <div class="container-fluid">
-      <table class="table text-center">
-        <tr>
-          <th>Order</th>
-          <th>Item Name</th>
-          <th>Quantity</th>
-          <th>Product Code</th>
-          <th>Order Date</th>
-          <th>Price</th>
-        </tr>
-        <tr *ngFor="let  order of  orderList | filter :  quantity ; let i =index">
-          <td>
-            {{ i+1 }}
-          </td>
-          <td>
-            {{ order.itemName}}
-          </td>
-          <td>
-            {{ order.quantity}}
-          </td>
-          <td>
-            {{ order.productCode}}
-          </td>
-          <td>
-            {{ order.orderDate | date : 'dd/MMM/yyyy'}}
-          </td>
-          <td>
-            {{ order.price}}
-          </td>
-        </tr>
-      </table>
+    <div class="container-fluid table-wrapper">
+      <div class="table-responsive">
+        <table class="table text-center">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Product Code</th>
+              <th>Item Name</th>
+              <th>Quantity</th>
+              <th>Original Price</th>
+              <th>Price</th>
+              <th>Order Date</th>
+              <th>Order Cancel Date</th>
+              <th>Order Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orderList | filter : searchText ; let i = index">
+              <td>{{ i+1 }}</td>
+              <td>{{ order.productCode}}</td>
+              <td>{{ order.itemName}}</td>
+              <td>{{ order.quantity}}</td>
+              <td>{{ order.actualPrice}}</td>
+              <td>{{ order.price}}</td>
+              <td>{{ order.orderDate}}</td>
+              <td>{{ order.orderCancelDate ? order.orderCancelDate : '-' }}</td>
+              <td style="text-align: left;">
+                <span class="status-indicator" [ngClass]="getStatusClass(order.orderStatus)"></span>
+                {{ order.orderStatus ? order.orderStatus : '-' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
+  <div class="emp my-4">
+    <div class="pemp">
+      <div class="table-header">
+        <p class="table-title">PRODUCT LIST</p>
+        <div class="inputQuantity">
+          <input class="form-control" type="text" [(ngModel)]="productSearchText" [formControl]="productSearchFilter"
+            placeholder="Search">
+        </div>
+      </div>
     </div>
 
+    <div class="container-fluid table-wrapper">
+      <div class="table-responsive">
+        <table class="table text-center">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Product Code</th>
+              <th>Item Name</th>
+              <th>Quantity</th>
+              <th>Original Price</th>
+              <th>Price</th>
+              <th>Product Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of productList | filter : productSearchText ; let i = index">
+              <td>{{ i+1 }}</td>
+              <td>{{ product.productCode}}</td>
+              <td>{{ product.itemName}}</td>
+              <td>{{ product.quantity}}</td>
+              <td>{{ product['actualPrice']}}</td>
+              <td>{{ product.price}}</td>
+              <td>{{ product['productDate']}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

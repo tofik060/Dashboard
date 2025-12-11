@@ -5,5 +5,8 @@ export interface OrderList {
     quantity : number;
     productCode : string;
     orderDate : Date;
+    orderCancelDate : Date;
     price?: number;
+    orderStatus : string;
+    actualPrice : number;
 }
