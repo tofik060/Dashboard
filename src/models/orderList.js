@@ -6,8 +6,7 @@ const orderSchema = new mongoose.Schema({
         required:[true,'Please enter the name of your product']
     },
     quantity:{
-        type : String,
-     
+        type : Number,
     },
     productCode:{
         type:String,
@@ -15,13 +14,37 @@ const orderSchema = new mongoose.Schema({
     },
     orderDate:{
         type:String,
-     
     },
     price:{
-        type:String,
+        type:Number,
         required:true
-    }
-
+    },
+    actualPrice:{
+        type:Number,
+    },
+    image:{
+        type:String,
+    },
+    orderCancelDate:{
+        type:String,
+    },
+    orderStatus:{
+        type:String,
+        default: 'Pending',
+        enum: ['Pending', 'Cancelled', 'Completed']
+    },
+    customerName:{
+        type: String
+    },
+    customerEmail:{
+        type: String
+    },
+    customerPhone:{
+        type: Number
+    },
+    customerAddress:{
+        type: String
+    },
 });
 
 const OrderList = new mongoose.model('OderList', orderSchema);

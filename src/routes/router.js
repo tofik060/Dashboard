@@ -13,20 +13,23 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const fs = require("fs");
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./uploads/");
-  },
-  filename: function (req, file, cb) {
-    //cb(null, file.fieldname + "_" + Date.now() + "_" + file.originalname)
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+const uploadDir = path.join(__dirname, '../uploads');
+
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadDir); // folder now guaranteed to exist
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
 });
-var upload = multer({
+const upload = multer({
   storage: storage,
 }).single("image");
-//console.log(path.join(__dirname, "./uploads/"))
-//console.log(path.join(__dirname, '../uploads/'))
 
 /**************************** All Cancellation Datas ********************************** */
 router.get("/cancel", (req, res) => {
@@ -35,12 +38,8 @@ router.get("/cancel", (req, res) => {
       res.json(data);
     })
     .catch((error) => {
-      res.json("Not find", error);
+      throw error;
     });
-});
-
-router.get("/cancel", (req, res) => {
-  res.send(" It's Work ");
 });
 
 router.post("/cancel", async (req, res) => {
@@ -57,7 +56,6 @@ router.post("/cancel", async (req, res) => {
     });
 
     const cancel = await cancelUser.save();
-    console.log("Successfully Order Cancel!", cancel);
     res.json({
       message: "Successfully Order Cancel!",
       status: 200,
@@ -78,41 +76,15 @@ router.get("/registration", async (req, res) => {
       res.json(data);
     })
     .catch(() => {
-      res.json({
-        message: "Data not found",
-        status: 500,
-      });
+      throw error;
     });
 });
-
-// router.get("/findOne",  async (req,res) => {
-
-//   try {
-//     const email = req.body.email;
-//     const password = req.body.password;
-
-//     const userData = await User.findOne({ email: email });
-
-//       res.json({
-//         message: "Login successfull",
-//         status: 200,
-//         userData: userData
-//       });
-//       console.log(userData);
-
-//   } catch (error) {
-//     res.send({
-//       message: "Invalid Password",
-//       status: 404,
-//     });
-//   }
-// })
 
 router.post("/registration", upload, async (req, res) => {
   try {
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
-    const imagePath = req.file ? req.file.path : null;
+    const imagePath = req.file ? path.join('uploads', req.file.filename) : null;
 
     if (password === confirmPassword) {
       const regUserData = new User({
@@ -124,15 +96,14 @@ router.post("/registration", upload, async (req, res) => {
         location: req.body.location,
         image: imagePath,
       });
-      console.log(req.file);
+
       const regUser = await regUserData.save();
-      console.log("Successfully Register!", regUser);
+
       res.send({
         message: "Successfully Register!",
         status: 200,
       });
     } else {
-      console.log("Password are't match");
       res.send({
         message: "Password are't match",
         status: 500,
@@ -149,19 +120,7 @@ router.post("/registration", upload, async (req, res) => {
 /********************************* All Login ************************************************* */
 
 router.get("/login", auth, (req, res) => {
-  // res.send("Its Work");
   res.json(req.user);
-  console.log(req.user);
-  // User.find()
-  // .then((data) => {
-  //   res.json(data);
-  // })
-  // .catch(() => {
-  //   res.json({
-  //     message: "Data not found",
-  //     status: 500,
-  //   });
-  // });
 });
 
 router.post("/login", async (req, res) => {
@@ -171,19 +130,10 @@ router.post("/login", async (req, res) => {
 
     const userData = await User.findOne({ email: email });
 
-    // const token = await userData.generateAuthToken();
-    // console.log("the token part : ", token);
-    // res.cookie("jwt", token, {
-    //   expires: new Date(Date.now() + 600000),
-    //   httpOnly: true,
-    //   //secure: true
-    // });
-
     const passwordMatch = await bcrypt.compare(password, userData.password);
 
     if (passwordMatch) {
       const token = await userData.generateAuthToken();
-      console.log("The part of token", token);
       res.cookie("jwt", token, {
         expires: new Date(Date.now() + 60000),
         httpOnly: true,
@@ -196,7 +146,6 @@ router.post("/login", async (req, res) => {
         token: token,
         userData: userData,
       });
-      console.log(passwordMatch);
     } else {
       res.send({
         message: "Invalid Details",
@@ -234,41 +183,23 @@ router.post("/change-password/:id", async (req, res) => {
 
     // Update the user's password
     user.password = newPassword;
-    // console.log(user.password)
     await user.save();
-    //await user.save({validateBeforeSave: false});
-    console.log("Password updated successfully.", user.password);
     return res.json({
       message: "Password updated successfully.",
       newPassword: user.password,
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({ error: "Internal Server Error." });
   }
 });
 
-// router.get("/login/:id", (req, res) => {
-//   const _id = req.params.id;
-//   User.findById(_id)
-//     .then((User) => {
-//       res.json(User);
-//       console.log(User);
-//     })
-//     .catch((error) => {
-//       res.send({
-//         message: "Not found",
-//         status: 500,
-//       });
-//     });
-// });
 /************************ Forget password post  ****************************** */
 router.post("/forget-password", async (req, res) => {
   try {
     //const id= req.params.id;
     const email = req.body.email;
     const user = await User.findOne({ email: email });
-    console.log("user", user);
+
     if (!user) {
       return res.send({
         message: "Invalid Details",
@@ -281,10 +212,7 @@ router.post("/forget-password", async (req, res) => {
     };
     const token = jwt.sign(payload, secret, { expiresIn: "15m" });
     const link = `http://localhost:4200/reset-password/${user._id}/${token}`;
-    console.log("password reset link has been send to ur email: ");
-    // res.send({
-    //   message: "password reset link has been send to ur email ",
-    // });
+
     const message = `
     <p>Hello, ${user.name}</p>
     <p>You have requested a password reset. Click the link below to reset your password:</p>
@@ -299,8 +227,7 @@ router.post("/forget-password", async (req, res) => {
       res.json({ message: 'Password reset instructions sent to your email.' });
     })
     .catch((error) => {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      throw error;
     });
 
   } catch (error) {
@@ -325,7 +252,6 @@ router.get("/forget-password/:id/:token", async (req, res) => {
       const payload = jwt.verify(token, secret);
       res.send(`http://localhost:9000/api/reset-password/${user._id}/${token}`);
     } catch (error) {
-      console.log(error.message);
       res.send({
         message: error.message,
         status: 500,
@@ -352,12 +278,6 @@ router.post("/reset-password/:id/:token", async (req, res) => {
     // Retrieve the user from the database
     const user = await User.findOne({ email: email });
 
-    // Verify the current password
-    // const isPasswordValid = await bcrypt.compare(
-    //   currentPassword,
-    //   user.password
-    // );
-
     if (!user) {
       return res.status(401).json({ error: "Invalid current password." });
     }
@@ -365,16 +285,12 @@ router.post("/reset-password/:id/:token", async (req, res) => {
     const payload = jwt.verify(token, secret);
     // Update the user's password
     user.password = newPassword;
-    // console.log(user.password)
     await user.save();
-    //await user.save({validateBeforeSave: false});
-    console.log("Password reset successfully.", user.password);
     return res.json({
       message: "Password reset successfully.",
       newPassword: user.password,
     });
   } catch (error) {
-    console.error(error.message);
     return res.status(500).json({
       message: "Internal Server Error.",
       error: error.message,
@@ -385,17 +301,12 @@ router.post("/reset-password/:id/:token", async (req, res) => {
 /****************************** Profile Id ********************************************* */
 
 router.get("/profile", (req, res) => {
-  //res.json(req.user);
-  //console.log(req.user);
   User.find()
     .then((data) => {
       res.json(data);
     })
     .catch(() => {
-      res.json({
-        message: "Data not found",
-        status: 500,
-      });
+      throw error;
     });
 });
 
@@ -404,13 +315,9 @@ router.get("/profile/:id", (req, res) => {
   User.findById(_id)
     .then((User) => {
       res.json(User);
-      console.log("Profile Id", User);
     })
     .catch((error) => {
-      res.send({
-        message: "Not found",
-        status: 500,
-      });
+      throw error;
     });
 });
 
@@ -420,16 +327,24 @@ router.post("/update/:id", upload, (req, res) => {
   const _id = req.params.id;
   let new_image = "";
   if (req.file) {
-    new_image = req.file ? req.file.path : null;
-    try {
-      const imagePathToDelete = path.join(
-        __dirname,
-        "./uploads/" + req.file ? req.file.path : null
-      );
-      fs.unlinkSync(imagePathToDelete);
-    } catch (error) {
-      console.log(error);
-    }
+    // Delete old image if it exists
+    User.findById(_id)
+      .then((user) => {
+        if (user && user.image) {
+          try {
+            const oldImagePath = path.join(__dirname, '..', user.image);
+            if (fs.existsSync(oldImagePath)) {
+              fs.unlinkSync(oldImagePath);
+            }
+          } catch (error) {
+          }
+        }
+      })
+      .catch((error) => {
+        throw error;
+      });
+    
+    new_image = path.join('uploads', req.file.filename);
   } else {
     new_image = req.body.image;
   }
@@ -443,10 +358,9 @@ router.post("/update/:id", upload, (req, res) => {
   User.findByIdAndUpdate(_id, userData, { new: true })
     .then((UserData) => {
       res.json(UserData);
-      console.log("User Update Succefully!", UserData);
     })
     .catch((error) => {
-      res.status(500).send(error);
+      throw error;
     });
 });
 
@@ -463,12 +377,15 @@ router.post("/delete/:id", async (req, res) => {
     if (email === userDelete.email || password === userDelete.password) {
       if (userDelete.image != "") {
         try {
-          fs.unlinkSync(userDelete.image);
+          // Convert relative path to absolute path for deletion
+          const imagePath = path.join(__dirname, '..', userDelete.image);
+          if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+          }
         } catch (error) {
-          console.log(error);
+          throw error;
         }
         res.json(userDelete);
-        console.log("User Delete Successfully!", userDelete);
       }
     }
   } catch (error) {
@@ -485,67 +402,48 @@ router.get("/order-details", async (req, res) => {
       res.json(data);
     })
     .catch((error) => {
+      throw error;
+    });
+});
+
+router.post("/order-details", async (req, res) => {
+  try {
+      const OrderList = new OderList({
+        itemName: req.body.itemName,
+        quantity: req.body.quantity,
+        productCode: req.body.productCode,
+        orderDate: req.body.orderDate,
+        price: req.body.price,
+        actualPrice: req.body.actualPrice,
+        customerName: req.body.customerName,
+        customerEmail: req.body.customerEmail,
+        customerPhone: req.body.customerPhone,
+        customerAddress: req.body.customerAddress,
+      });
+  
+      const orderList = await OrderList.save();
+  
+      res.json({
+        message: "Successfully Added New Order!",
+        status: 200,
+      });
+    } catch (error) {
       res.json({
         error: error,
         message: "Order Not Get!",
         status: 500,
       });
-    });
-
-  // try {
-  //   const orderData = await OrderList.find()
-
-  //       res.json({
-  //       orderData
-  //     });
-
-  // } catch (error) {
-  //       res.json({
-  //       error: error,
-  //       message: "Order Not Get!",
-  //       status: 500,
-  //     });
-  // }
-});
-
-router.post("/order-details", async (req, res) => {
-  try {
-    const orderList = new OderList({
-      itemName: req.body.itemName,
-      //quantity: req.body.quantity,
-      productCode: req.body.productCode,
-      //orderDate: req.body.orderDate,
-      price: req.body.price,
-    });
-
-    const Order = await orderList.save();
-
-    console.log("Order Insert Successfully!", Order);
-    res.json({
-      message: "Successfullt Added New Order !",
-      status: 200,
-    });
-  } catch (error) {
-    res.json({
-      error: error,
-      message: "Order Not Get!",
-      status: 500,
-    });
-  }
-});
+    }
+  });
 
 router.get("/order-details/:id", (req, res) => {
   const _id = req.params.id;
   OrderList.findById(_id)
     .then((order) => {
       res.json(order);
-      // console.log("Order Data",order);
     })
     .catch((error) => {
-      res.send({
-        message: "Not found",
-        status: 500,
-      });
+      throw error;
     });
 });
 
@@ -553,18 +451,17 @@ router.post("/order-details-update/:id", (req, res) => {
   const _id = req.params.id;
   const userData = {
     itemName: req.body.itemName,
-    // quantity: req.body.quantity,
     productCode: req.body.productCode,
-    //orderDate: req.body.orderDate,
     price: req.body.price,
+    orderCancelDate: req.body.cancelDate,
+    orderStatus: req.body.orderStatus,
   };
   OrderList.findByIdAndUpdate(_id, userData, { new: true })
     .then((UserData) => {
       res.json(UserData);
-      // console.log("Order Update Succefully!", UserData);
     })
     .catch((error) => {
-      res.status(500).send(error);
+      throw error;
     });
 });
 
@@ -577,11 +474,7 @@ router.get("/product", async (req, res) => {
       res.json(data);
     })
     .catch((error) => {
-      res.json({
-        error: error,
-        message: "Order Not Get!",
-        status: 500,
-      });
+      throw error;
     });
 });
 
@@ -591,13 +484,11 @@ router.post("/product", async (req, res) => {
       itemName: req.body.itemName,
       quantity: req.body.quantity,
       productCode: req.body.productCode,
-      orderDate: req.body.orderDate,
+      productDate: req.body.productDate,
       price: req.body.price,
     });
 
     const product = await productList.save();
-
-    console.log("Product Insert Successfully!", product);
     res.json({
       message: "Successfullt Added New Order!",
       status: 200,
@@ -605,7 +496,7 @@ router.post("/product", async (req, res) => {
   } catch (error) {
     res.json({
       error: error,
-      message: "Order Not Get!",
+      message: "Product Not Get!",
       status: 500,
     });
   }
@@ -616,13 +507,9 @@ router.get("/product/:id", (req, res) => {
   Product.findById(_id)
     .then((order) => {
       res.json(order);
-      // console.log("Order Data",order);
     })
     .catch((error) => {
-      res.send({
-        message: "Not found",
-        status: 500,
-      });
+      throw error;
     });
 });
 
@@ -632,16 +519,15 @@ router.post("/product-details/:id", (req, res) => {
     itemName: req.body.itemName,
     quantity: req.body.quantity,
     productCode: req.body.productCode,
-    orderDate: req.body.orderDate,
+    productDate: req.body.productDate,
     price: req.body.price,
   };
   Product.findByIdAndUpdate(_id, userData, { new: true })
     .then((UserData) => {
       res.json(UserData);
-      // console.log("Order Update Succefully!", UserData);
     })
     .catch((error) => {
-      res.status(500).send(error);
+      throw error;
     });
 });
 
@@ -654,7 +540,6 @@ router.get("/logout", auth, async (req, res) => {
       return res.status(401).send({ message: "No token provided" });
     }
 
-    console.log("Logout successfully :", req.user);
     req.user.tokens = [];
 
     res.clearCookie("jwt");

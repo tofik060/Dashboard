@@ -6,20 +6,25 @@ const productSchema = new mongoose.Schema({
         required:[true,'Please enter the name of your product']
     },
     quantity:{
-        type : String,
-     
+        type : Number,
     },
     productCode:{
         type:String,
         required:[true,'Please enter the name of your product']
     },
-    orderDate:{
+    productDate:{
         type:String,
-     
+    },
+    actualPrice:{
+        type:Number,
+        required:true
     },
     price:{
-        type:String,
+        type:Number,
         required:true
+    },
+    image:{
+        type:String,
     }
 
 });

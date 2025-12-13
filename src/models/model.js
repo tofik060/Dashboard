@@ -22,11 +22,11 @@ const cancelSchema = new mongoose.Schema({
         required: true
     },
     quantity:{
-        type : String,
+        type : Number,
      
     },
     price:{
-        type:String,
+        type:Number,
         required:true
     },
     description:{
