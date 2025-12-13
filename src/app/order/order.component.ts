@@ -19,6 +19,7 @@ export class OrderComponent implements OnInit {
   quantityFilter = new FormControl(0);
 
   orderList: any = [];
+  originalOrderList: any = [];
 
   constructor(
     private dashboardService: DashboardService,
@@ -36,6 +37,7 @@ export class OrderComponent implements OnInit {
       .subscribe(
         (res) => {
           this.orderList = res;
+          this.originalOrderList = res;
         }
       )
     }
@@ -49,15 +51,12 @@ export class OrderComponent implements OnInit {
 
   search() {
     if (this.searchQuery === '') {
-     this.dashboardService.orderAll()
-     .subscribe(
-       (res) => {
-         this.orderList = res;
-       }
-     )
+      this.orderList = [...this.originalOrderList];
     } else {
-      this.orderList = this.orderList.filter((order: { itemName: string }) =>
-        order.itemName.toLowerCase().includes(this.searchQuery.toLowerCase())
+      this.orderList = this.originalOrderList.filter((order: { itemName: string; productCode?: string; orderDate?: string }) =>
+        order.itemName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        order.productCode?.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        order.orderDate?.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     }
   }
