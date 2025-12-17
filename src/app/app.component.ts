@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
-  title = 'DashboardApp';
+  title = 'E-Mart Dashboard Application';
   constructor(private router: Router){}
 
   ngOnInit(): void {}
