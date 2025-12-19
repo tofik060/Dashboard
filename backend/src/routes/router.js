@@ -211,7 +211,8 @@ router.post("/forget-password", async (req, res) => {
       email: user.email,
     };
     const token = jwt.sign(payload, secret, { expiresIn: "15m" });
-    const link = `http://localhost:4200/reset-password/${user._id}/${token}`;
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:4200";
+    const link = `${frontendUrl}/reset-password/${user._id}/${token}`;
 
     const message = `
     <p>Hello, ${user.name}</p>
@@ -250,7 +251,8 @@ router.get("/forget-password/:id/:token", async (req, res) => {
     const secret = process.env.SECRET_KEY + user.password;
     try {
       const payload = jwt.verify(token, secret);
-      res.send(`http://localhost:9000/api/reset-password/${user._id}/${token}`);
+      const backendUrl = process.env.BACKEND_URL || "http://localhost:9000";
+      res.send(`${backendUrl}/api/reset-password/${user._id}/${token}`);
     } catch (error) {
       res.send({
         message: error.message,

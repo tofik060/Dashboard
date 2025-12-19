@@ -7,12 +7,13 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, catchError, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
-  private REST_API = 'http://localhost:9000/api';
+  private REST_API = environment.apiUrl;
   constructor(
     private http: HttpClient,
     private router: Router,

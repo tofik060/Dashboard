@@ -1,6 +1,14 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
+
+// Log environment information
+const isDevelopment = process.env.NODE_ENV !== 'production';
+console.log('='.repeat(50));
+console.log(`🚀 Starting server in ${isDevelopment ? 'DEVELOPMENT' : 'PRODUCTION'} mode`);
+console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
+console.log('='.repeat(50));
+
 require('./db/conn')
 const port = process.env.PORT || 9000;
 const cors = require('cors');
@@ -11,7 +19,11 @@ const path = require('path')
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(cors({
-    origin: "http://localhost:4200",
+    origin: [
+        "http://localhost:4200",
+        process.env.FRONTEND_URL || "https://your-frontend-app.vercel.app",
+        /\.vercel\.app$/
+    ],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -24,7 +36,14 @@ const router = require('./routes/router')
 app.use('/api', router)
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`)
+    console.log(`✅ Server running at http://localhost:${port}`);
+    console.log(`🌍 Environment: ${isDevelopment ? 'Development' : 'Production'}`);
+    if (isDevelopment) {
+        console.log(`📊 Database: Local MongoDB (mongodb://127.0.0.1:27017/dashboard)`);
+    } else {
+        console.log(`📊 Database: MongoDB Atlas`);
+    }
+    console.log('='.repeat(50));
 });
 
 app.get('/',(req, res) => {
