@@ -35,20 +35,26 @@ app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
 const router = require('./routes/router')
 app.use('/api', router)
 
-app.listen(port, () => {
-    console.log(`✅ Server running at http://localhost:${port}`);
-    console.log(`🌍 Environment: ${isDevelopment ? 'Development' : 'Production'}`);
-    if (isDevelopment) {
-        console.log(`📊 Database: Local MongoDB (mongodb://127.0.0.1:27017/dashboard)`);
-    } else {
-        console.log(`📊 Database: MongoDB Atlas`);
-    }
-    console.log('='.repeat(50));
-});
+// Only start server if not in Vercel (for local development)
+if (process.env.VERCEL !== '1') {
+    app.listen(port, () => {
+        console.log(`✅ Server running at http://localhost:${port}`);
+        console.log(`🌍 Environment: ${isDevelopment ? 'Development' : 'Production'}`);
+        if (isDevelopment) {
+            console.log(`📊 Database: Local MongoDB (mongodb://127.0.0.1:27017/dashboard)`);
+        } else {
+            console.log(`📊 Database: MongoDB Atlas`);
+        }
+        console.log('='.repeat(50));
+    });
+}
 
 app.get('/',(req, res) => {
     res.send(" Invalid endpoint ")
 })
+
+// Export the app for Vercel serverless functions
+module.exports = app;
 
 // Error Handle
 
