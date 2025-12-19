@@ -31,12 +31,14 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Only serve uploads if not in Vercel (serverless has limitations with file serving)
-if (process.env.VERCEL !== '1') {
-    app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-} else {
-    // In Vercel, serve from /tmp/uploads if needed
+// Serve uploads - use /tmp in production (Vercel serverless), otherwise local
+const isServerless = process.env.NODE_ENV === 'production' || __dirname.includes('/var/task');
+if (isServerless) {
+    // In Vercel/serverless, serve from /tmp/uploads
     app.use('/uploads', express.static('/tmp/uploads'));
+} else {
+    // Local development - serve from local uploads folder
+    app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 }
 
 const router = require('./routes/router')

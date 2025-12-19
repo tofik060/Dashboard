@@ -13,8 +13,10 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const fs = require("fs");
 
-// Use /tmp for Vercel serverless (only writable directory), otherwise use local uploads
-const uploadDir = process.env.VERCEL === '1' 
+// Use /tmp for production/Vercel serverless (only writable directory), otherwise use local uploads
+// Check if we're in a serverless environment by checking the path
+const isServerless = process.env.NODE_ENV === 'production' || __dirname.includes('/var/task');
+const uploadDir = isServerless 
     ? path.join('/tmp', 'uploads')
     : path.join(__dirname, '../uploads');
 
@@ -24,8 +26,10 @@ try {
         fs.mkdirSync(uploadDir, { recursive: true });
     }
 } catch (error) {
+    // Don't crash - just log warning. In serverless, directory creation might fail
     console.warn('Warning: Could not create uploads directory:', error.message);
     console.warn('Uploads may not work in serverless environment. Consider using cloud storage.');
+    // Continue anyway - multer will handle errors
 }
 
 const storage = multer.diskStorage({
