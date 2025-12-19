@@ -30,7 +30,14 @@ app.use(cors({
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use('/uploads',express.static(path.join(__dirname, 'uploads')));
+
+// Only serve uploads if not in Vercel (serverless has limitations with file serving)
+if (process.env.VERCEL !== '1') {
+    app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+} else {
+    // In Vercel, serve from /tmp/uploads if needed
+    app.use('/uploads', express.static('/tmp/uploads'));
+}
 
 const router = require('./routes/router')
 app.use('/api', router)

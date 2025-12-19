@@ -13,10 +13,19 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const fs = require("fs");
 
-const uploadDir = path.join(__dirname, '../uploads');
+// Use /tmp for Vercel serverless (only writable directory), otherwise use local uploads
+const uploadDir = process.env.VERCEL === '1' 
+    ? path.join('/tmp', 'uploads')
+    : path.join(__dirname, '../uploads');
 
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+// Try to create directory, but don't crash if it fails (Vercel serverless limitations)
+try {
+    if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    }
+} catch (error) {
+    console.warn('Warning: Could not create uploads directory:', error.message);
+    console.warn('Uploads may not work in serverless environment. Consider using cloud storage.');
 }
 
 const storage = multer.diskStorage({
