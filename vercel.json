@@ -3,7 +3,6 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "framework": null,
-  "nodeVersion": "20.x",
   "builds": [
     {
       "src": "package.json",
