@@ -17,6 +17,7 @@ export class EditUserComponent implements OnInit {
   userForm!: FormGroup;
   items: any = [];
   selectedImage: any;
+  isLoading: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -37,9 +38,23 @@ export class EditUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.activated.snapshot.paramMap.get('id');
-    this.dashboardService.profile(this.id).subscribe((response) => {
-      this.userForm.patchValue(response);
-      this.items = response;
+    this.isLoading = true;
+    
+    this.dashboardService.profile(this.id).subscribe({
+      next: (response) => {
+        this.userForm.patchValue(response);
+        this.items = response;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading user data:', error);
+        this.isLoading = false;
+        this.snackBar.open('Error loading profile data', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top'
+        });
+      }
     });
   }
 

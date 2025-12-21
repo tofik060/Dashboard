@@ -3,7 +3,15 @@
     <h1 class="my-3 px-3 bg-light border-light rounded-2">
       User Personal Details
     </h1>
-    <div class="card">
+    
+    <!-- Loader -->
+    <div *ngIf="isLoading" class="loader-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading profile...</p>
+    </div>
+    
+    <!-- Profile Content -->
+    <div *ngIf="!isLoading" class="card">
       <div class="row px-2 py-2">
         <div class="col-12 col-md-4 text-center mb-3 mb-md-0" style="padding-top: 24px">
           <img

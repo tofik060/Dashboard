@@ -16,6 +16,7 @@ export class UsersComponent implements OnInit {
   password: string = '';
 
   user: any;
+  isLoading: boolean = true;
   
   constructor(
     private dashboardService : DashboardService,
@@ -29,15 +30,29 @@ export class UsersComponent implements OnInit {
     const userInfoStr = localStorage.getItem('userInfo');
     if(!token){
       this.router.navigate(['/'])
+      return;
     }
+    
+    this.isLoading = true;
+    
     if(token && userInfoStr){
       const userInfo = JSON.parse(userInfoStr);
-      this.dashboardService.profile(userInfo?._id).subscribe((res) =>{
-        this.user = res
-      })
+      this.dashboardService.profile(userInfo?._id).subscribe({
+        next: (res) => {
+          this.user = res;
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error loading profile:', error);
+          this.isLoading = false;
+          // Optionally redirect on error
+          // this.router.navigate(['/']);
+        }
+      });
       this.dashboardService.Login();
+    } else {
+      this.isLoading = false;
     }
-
   }
 
   getImageUrl(imagePath: any): string {
