@@ -170,6 +170,19 @@ export class DashboardService {
       })
     );
   }
+
+  /************************** UploadDoc API ****************************** */
+  // Get uploadDoc by email (for navbar and profile image)
+  getUploadDocByEmail(email: string) {
+    let api_url = `${this.REST_API}/uploadDoc/${email}`;
+    return this.http.get(api_url).pipe(catchError(this.handleError));
+  }
+
+  // Get all uploadDocs (optional, for admin)
+  getAllUploadDocs() {
+    let api_url = `${this.REST_API}/uploadDoc`;
+    return this.http.get(api_url).pipe(catchError(this.handleError));
+  }
   /******************************* Change Password ************************************** */
   changePassword(id:any,data:any){
     let api_url = `${this.REST_API}/change-password/${id}`;
