@@ -30,12 +30,15 @@ const connectDB = async () => {
     console.log(`Connecting to ${dbName}...`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 
-    // Create connection promise
+    // Create connection promise with optimized settings
     cachedConnection = mongoose.connect(dbUri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+        serverSelectionTimeoutMS: 5000, // Timeout after 5s
         socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+        maxPoolSize: 10, // Maintain up to 10 socket connections
+        minPoolSize: 1, // Maintain at least 1 socket connection
+        connectTimeoutMS: 10000, // Give up initial connection after 10s
     })
         .then(() => {
             console.log(`✅ Database connected successfully to ${dbName}`);

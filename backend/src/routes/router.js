@@ -353,58 +353,73 @@ router.get("/profile", (req, res) => {
     });
 });
 
-router.get("/profile/:id", (req, res) => {
-  const _id = req.params.id;
-  User.findById(_id)
-    .then((User) => {
-      res.json(User);
-    })
-    .catch((error) => {
-      throw error;
+router.get("/profile/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const user = await User.findById(_id).lean(); // Use lean() for faster queries
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching profile',
+      error: error.message
     });
+  }
 });
 
 /******************************** Update Profile ******************************** */
 
-router.post("/update/:id", upload, (req, res) => {
-  const _id = req.params.id;
-  let new_image = "";
-  if (req.file) {
-    // Delete old image if it exists
-    User.findById(_id)
-      .then((user) => {
-        if (user && user.image) {
-          try {
-            const oldImagePath = path.join(__dirname, '..', user.image);
-            if (fs.existsSync(oldImagePath)) {
-              fs.unlinkSync(oldImagePath);
-            }
-          } catch (error) {
-          }
-        }
-      })
-      .catch((error) => {
-        throw error;
-      });
+router.post("/update/:id", upload, async (req, res) => {
+  try {
+    const _id = req.params.id;
+    let new_image = "";
     
-    new_image = path.join('uploads', req.file.filename);
-  } else {
-    new_image = req.body.image;
-  }
-  const userData = {
-    name: req.body.name,
-    email: req.body.email,
-    phone: req.body.phone,
-    location: req.body.location,
-    image: new_image,
-  };
-  User.findByIdAndUpdate(_id, userData, { new: true })
-    .then((UserData) => {
-      res.json(UserData);
-    })
-    .catch((error) => {
-      throw error;
+    if (req.file) {
+      // Get user first to check for old image (only if we need to delete it)
+      const existingUser = await User.findById(_id).select('image').lean();
+      
+      // Delete old image if it exists (async, don't wait)
+      if (existingUser && existingUser.image) {
+        try {
+          const oldImagePath = path.join(__dirname, '..', existingUser.image);
+          // Use async file operations (non-blocking)
+          fs.unlink(oldImagePath, (err) => {
+            if (err && err.code !== 'ENOENT') {
+              console.warn('Could not delete old image:', err.message);
+            }
+          });
+        } catch (error) {
+          // Ignore file deletion errors
+        }
+      }
+      
+      new_image = path.join('uploads', req.file.filename);
+    } else {
+      new_image = req.body.image;
+    }
+    
+    const userData = {
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      location: req.body.location,
+      image: new_image,
+    };
+    
+    const updatedUser = await User.findByIdAndUpdate(_id, userData, { new: true });
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error updating profile',
+      error: error.message
     });
+  }
 });
 
 /******************** Delete User ************************************** */
@@ -439,14 +454,17 @@ router.post("/delete/:id", async (req, res) => {
 /**************************** OrderList  **************************************** */
 
 router.get("/order-details", async (req, res) => {
-  // res.send('Its work')
-  OrderList.find()
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((error) => {
-      throw error;
+  try {
+    const orders = await OrderList.find().lean().sort({ orderDate: -1 }).limit(100); // Limit results and sort
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching orders',
+      error: error.message
     });
+  }
 });
 
 router.post("/order-details", async (req, res) => {
@@ -479,15 +497,22 @@ router.post("/order-details", async (req, res) => {
     }
   });
 
-router.get("/order-details/:id", (req, res) => {
-  const _id = req.params.id;
-  OrderList.findById(_id)
-    .then((order) => {
-      res.json(order);
-    })
-    .catch((error) => {
-      throw error;
+router.get("/order-details/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const order = await OrderList.findById(_id).lean();
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    res.json(order);
+  } catch (error) {
+    console.error('Error fetching order:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching order',
+      error: error.message
     });
+  }
 });
 
 router.post("/order-details-update/:id", (req, res) => {
@@ -511,14 +536,17 @@ router.post("/order-details-update/:id", (req, res) => {
 /***************** Product ***************************************** */
 
 router.get("/product", async (req, res) => {
-  // res.send('Its work')
-  Product.find()
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((error) => {
-      throw error;
+  try {
+    const products = await Product.find().lean().limit(100); // Limit results for better performance
+    res.json(products);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching products',
+      error: error.message
     });
+  }
 });
 
 router.post("/product", async (req, res) => {
@@ -545,15 +573,22 @@ router.post("/product", async (req, res) => {
   }
 });
 
-router.get("/product/:id", (req, res) => {
-  const _id = req.params.id;
-  Product.findById(_id)
-    .then((order) => {
-      res.json(order);
-    })
-    .catch((error) => {
-      throw error;
+router.get("/product/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const product = await Product.findById(_id).lean();
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    res.json(product);
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching product',
+      error: error.message
     });
+  }
 });
 
 router.post("/product-details/:id", (req, res) => {

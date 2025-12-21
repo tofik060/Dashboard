@@ -14,12 +14,26 @@ const connectDB = require('./db/conn');
 const port = process.env.PORT || 9000;
 
 // Middleware to ensure DB connection before handling requests (for serverless)
+// Optimized: Only check connection state, don't wait if already connecting
 const ensureDBConnection = async (req, res, next) => {
     try {
-        if (mongoose.connection.readyState !== 1) {
-            console.log('Database not connected, connecting now...');
-            await connectDB();
+        const connectionState = mongoose.connection.readyState;
+        
+        // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
+        if (connectionState === 1) {
+            // Already connected, proceed immediately
+            return next();
         }
+        
+        if (connectionState === 2) {
+            // Connection in progress, wait a bit then proceed (connection will be ready)
+            // Don't block - proceed and let mongoose handle buffering
+            return next();
+        }
+        
+        // Not connected, connect now
+        console.log('Database not connected, connecting now...');
+        await connectDB();
         next();
     } catch (error) {
         console.error('Database connection error:', error);
