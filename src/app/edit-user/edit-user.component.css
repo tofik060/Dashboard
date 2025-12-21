@@ -69,6 +69,11 @@
     object-fit: cover;
   }
 
+  /* User Initials Avatar */
+  .user-initials-avatar {
+    border-radius: 50%;
+  }
+
   /* Mobile Responsive Styles */
   @media (max-width: 768px) {
     .responsive-container {
