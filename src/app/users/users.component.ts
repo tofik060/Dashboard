@@ -39,8 +39,8 @@ export class UsersComponent implements OnInit {
 
   }
 
-  getImageUrl(imagePath: string): string {
-    if (!imagePath) return '../../assets/profile.jpg';
+  getImageUrl(imagePath: any): string {
+    if (!imagePath || typeof imagePath !== 'string') return '../../assets/profile.jpg';
     const backendUrl = this.dashboardService.getBackendUrl();
     return `${backendUrl}/${imagePath}`;
   }
