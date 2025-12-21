@@ -6,9 +6,7 @@ import { MatMenuPanel } from '@angular/material/menu';
 import { user } from '../users/user';
 import { DashboardService } from '../services/dashboard.service';
 import { Router } from '@angular/router';
-
-
-
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-app-nav',
@@ -127,6 +125,6 @@ export class AppNavComponent implements OnInit, OnDestroy {
   }
 
   hasUserImage(): boolean {
-    return !!(this.user && this.user.image && typeof this.user.image === 'string' && this.user.image.trim() !== '');
+    return !!(this.user && this.user.image && typeof this.user.image === 'string' && this.user.image.trim() !== '' && environment.production === false);
   }
 }
