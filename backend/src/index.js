@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({extended : true}));
 app.use(cors({
     origin: [
         "http://localhost:4200",
-        process.env.FRONTEND_URL || "https://emart-backend.vercel.app/api",
+        process.env.FRONTEND_URL || "https://emart-backend-pi.vercel.app/api",
         /\.vercel\.app$/
     ],
     credentials: true,
