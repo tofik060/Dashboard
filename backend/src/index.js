@@ -50,13 +50,59 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Serve uploads - use /tmp in production (Vercel serverless), otherwise local
+// Serve uploads - handle both static (local) and API route (serverless)
 const isServerless = process.env.NODE_ENV === 'production' || __dirname.includes('/var/task');
-if (isServerless) {
-    // In Vercel/serverless, serve from /tmp/uploads
-    app.use('/uploads', express.static('/tmp/uploads'));
-} else {
-    // Local development - serve from local uploads folder
+const fs = require('fs');
+
+// Determine upload directory
+const uploadDir = isServerless 
+    ? path.join('/tmp', 'uploads')
+    : path.join(__dirname, 'uploads');
+
+// Handle uploads route for serverless (Vercel can't reliably serve static files from /tmp)
+app.get('/uploads/:filename', (req, res) => {
+    try {
+        const filename = req.params.filename;
+        const filePath = path.join(uploadDir, filename);
+        
+        // Check if file exists
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({
+                success: false,
+                message: 'Image not found'
+            });
+        }
+        
+        // Determine content type based on file extension
+        const ext = path.extname(filename).toLowerCase();
+        const contentTypes = {
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.png': 'image/png',
+            '.gif': 'image/gif',
+            '.webp': 'image/webp'
+        };
+        
+        const contentType = contentTypes[ext] || 'application/octet-stream';
+        
+        // Set appropriate headers
+        res.setHeader('Content-Type', contentType);
+        res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+        
+        // Send the file
+        res.sendFile(filePath);
+    } catch (error) {
+        console.error('Error serving image:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error serving image',
+            error: error.message
+        });
+    }
+});
+
+// Also serve static files for local development (fallback)
+if (!isServerless) {
     app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 }
 
