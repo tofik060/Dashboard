@@ -11,10 +11,18 @@
             <div class="d-flex justify-content-center" *ngFor="let item of items | keyvalue">
               <ng-container *ngIf="item.key === 'image'">
                 <img
+                  *ngIf="hasUserImage()"
                   class="profile-avatar"
                   [src]="getImageUrl(item.value)"
                   alt="image"
                 />
+                <div
+                  *ngIf="!hasUserImage()"
+                  class="profile-avatar user-initials-avatar"
+                  style="display: flex; align-items: center; justify-content: center; background-color: #4caf50; color: white; font-weight: bold; font-size: 48px;"
+                >
+                  {{ getUserInitials() }}
+                </div>
               </ng-container>
             </div>
             <div class="my-3 d-flex justify-content-center w-100">

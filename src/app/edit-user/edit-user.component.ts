@@ -5,6 +5,7 @@ import { DashboardService } from '../services/dashboard.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../order-register/confirm-dialog.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-edit-user',
@@ -106,5 +107,23 @@ export class EditUserComponent implements OnInit {
     if (!imagePath || typeof imagePath !== 'string') return 'assets/profile.jpg';
     const backendUrl = this.dashboardService.getBackendUrl();
     return `${backendUrl}/${imagePath}`;
+  }
+
+  getUserInitials(): string {
+    if (!this.items || !this.items.name) return 'U';
+    const nameParts = this.items.name.trim().split(' ');
+    if (nameParts.length >= 2) {
+      // Get first letter of first word and first letter of last word
+      return (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+    } else if (nameParts.length === 1) {
+      // Single word name - take first two letters
+      return nameParts[0].substring(0, 2).toUpperCase();
+    }
+    return 'U';
+  }
+
+  hasUserImage(): boolean {
+    const imageValue = this.items && this.items.image ? this.items.image : null;
+    return !!(imageValue && typeof imageValue === 'string' && imageValue.trim() !== '' && environment.production === false);
   }
 }
