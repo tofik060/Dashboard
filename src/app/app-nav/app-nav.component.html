@@ -86,11 +86,19 @@
                 class="user mt-2 d-flex align-item center"
               >
                 <img
+                  *ngIf="hasUserImage()"
                   class="rounded-circle"
-                  [src]="user && user.image ? getImageUrl(user.image) : 'assets/profile.jpg'"
+                  [src]="getImageUrl(user.image)"
                   alt=""
                   style="width: 30px; height: 30px"
                 />
+                <div
+                  *ngIf="!hasUserImage()"
+                  class="user-initials-avatar rounded-circle"
+                  style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background-color: #4caf50; color: white; font-weight: bold; font-size: 12px;"
+                >
+                  {{ getUserInitials() }}
+                </div>
                 <mat-icon class="user-image-icon">keyboard_arrow_down</mat-icon>
               </button>
               <mat-menu #menu="matMenu" class="mt-2">
