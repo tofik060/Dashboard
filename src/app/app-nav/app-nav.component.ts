@@ -109,7 +109,8 @@ export class AppNavComponent implements OnInit, OnDestroy {
 
   getImageUrl(imagePath: any): string {
     if (!imagePath || typeof imagePath !== 'string') return 'assets/profile.jpg';
-    const backendUrl = this.dashboardService.getBackendUrl();
+    // Image path already includes 'uploads/' from database, so append to apiUrl
+    const backendUrl = this.dashboardService.getBackendUrl(); // This returns /api
     return `${backendUrl}/${imagePath}`;
   }
 

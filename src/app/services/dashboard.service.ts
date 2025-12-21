@@ -15,9 +15,9 @@ import { environment } from '../../environments/environment';
 export class DashboardService {
   private REST_API = environment.apiUrl;
   
-  // Get backend base URL (without /api)
+  // Get backend base URL (with /api for uploads)
   getBackendUrl(): string {
-    return environment.apiUrl.replace('/api', '');
+    return environment.apiUrl; // Keep /api in the URL for uploads
   }
   
   constructor(

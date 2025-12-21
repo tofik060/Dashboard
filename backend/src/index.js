@@ -59,7 +59,8 @@ const uploadDir = isServerless
     ? path.join('/tmp', 'uploads')
     : path.join(__dirname, 'uploads');
 
-// Handle uploads route for serverless (Vercel can't reliably serve static files from /tmp)
+// Uploads route moved to /api/uploads/:filename in router.js for consistency
+// Keeping this as fallback for backward compatibility (can be removed later)
 app.get('/uploads/:filename', (req, res) => {
     try {
         const filename = req.params.filename;
