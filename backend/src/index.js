@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 
 // Log environment information
@@ -9,8 +10,26 @@ console.log(`🚀 Starting server in ${isDevelopment ? 'DEVELOPMENT' : 'PRODUCTI
 console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
 console.log('='.repeat(50));
 
-require('./db/conn')
+const connectDB = require('./db/conn');
 const port = process.env.PORT || 9000;
+
+// Middleware to ensure DB connection before handling requests (for serverless)
+const ensureDBConnection = async (req, res, next) => {
+    try {
+        if (mongoose.connection.readyState !== 1) {
+            console.log('Database not connected, connecting now...');
+            await connectDB();
+        }
+        next();
+    } catch (error) {
+        console.error('Database connection error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Database connection failed',
+            error: error.message
+        });
+    }
+};
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -42,7 +61,8 @@ if (isServerless) {
 }
 
 const router = require('./routes/router')
-app.use('/api', router)
+// Apply DB connection middleware to all API routes
+app.use('/api', ensureDBConnection, router)
 
 // Only start server if not in Vercel (for local development)
 if (process.env.VERCEL !== '1') {

@@ -1,38 +1,66 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-const dbUri = process.env.DB_URI;
+// Cache the connection promise to reuse in serverless
+let cachedConnection = null;
 
-if (!dbUri) {
-    console.error('ERROR: DB_URI environment variable is not set!');
-    // Don't exit in serverless - let it log the error
-    if (process.env.VERCEL !== '1') {
-        process.exit(1);
+const connectDB = async () => {
+    // If already connected, return
+    if (mongoose.connection.readyState === 1) {
+        console.log('✅ Using existing database connection');
+        return mongoose.connection;
     }
-} else {
+
+    // If connection is in progress, return the promise
+    if (cachedConnection) {
+        console.log('⏳ Waiting for existing connection...');
+        return cachedConnection;
+    }
+
+    const dbUri = process.env.DB_URI;
+
+    if (!dbUri) {
+        console.error('ERROR: DB_URI environment variable is not set!');
+        throw new Error('DB_URI is not configured');
+    }
+
     const isDevelopment = process.env.NODE_ENV !== 'production';
     const dbName = isDevelopment ? 'dashboard (local)' : 'MongoDB Atlas';
 
     console.log(`Connecting to ${dbName}...`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 
-    mongoose.connect(dbUri, {
+    // Create connection promise
+    cachedConnection = mongoose.connect(dbUri, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+        socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
     })
         .then(() => {
             console.log(`✅ Database connected successfully to ${dbName}`);
+            return mongoose.connection;
         })
         .catch((error) => {
             console.error('❌ Database connection failed:', error.message);
+            cachedConnection = null; // Reset on error so it can retry
             if (isDevelopment) {
                 console.error('Make sure MongoDB is running locally on port 27017');
             } else {
                 console.error('Check your MongoDB Atlas connection string and network access settings');
             }
-            // Don't exit in serverless - connection will retry on next request
-            if (process.env.VERCEL !== '1') {
-                process.exit(1);
-            }
+            throw error;
         });
+
+    return cachedConnection;
+};
+
+// Auto-connect on module load (for non-serverless)
+if (process.env.VERCEL !== '1' && process.env.NODE_ENV !== 'production') {
+    connectDB().catch((error) => {
+        console.error('Failed to connect on startup:', error);
+        process.exit(1);
+    });
 }
+
+module.exports = connectDB;
