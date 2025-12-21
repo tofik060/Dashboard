@@ -63,13 +63,35 @@ const uploadDir = isServerless
 app.get('/uploads/:filename', (req, res) => {
     try {
         const filename = req.params.filename;
-        const filePath = path.join(uploadDir, filename);
+        const filePath = path.resolve(uploadDir, filename);
+        
+        console.log(`[Image Request] Filename: ${filename}`);
+        console.log(`[Image Request] Looking for file at: ${filePath}`);
+        console.log(`[Image Request] Upload directory: ${uploadDir}`);
+        console.log(`[Image Request] Is serverless: ${isServerless}`);
+        console.log(`[Image Request] File exists: ${fs.existsSync(filePath)}`);
         
         // Check if file exists
         if (!fs.existsSync(filePath)) {
+            console.log(`[Image Request] File not found at: ${filePath}`);
+            // List what's actually in the directory for debugging
+            try {
+                if (fs.existsSync(uploadDir)) {
+                    const files = fs.readdirSync(uploadDir);
+                    console.log(`[Image Request] Files in upload directory: ${files.join(', ')}`);
+                } else {
+                    console.log(`[Image Request] Upload directory does not exist: ${uploadDir}`);
+                }
+            } catch (dirError) {
+                console.log(`[Image Request] Could not read upload directory: ${dirError.message}`);
+            }
+            
             return res.status(404).json({
                 success: false,
-                message: 'Image not found'
+                message: 'Image not found',
+                filename: filename,
+                path: filePath,
+                note: 'In Vercel serverless, /tmp files are ephemeral and may not persist between function invocations. Consider using cloud storage (S3, Cloudinary, etc.) for production.'
             });
         }
         
@@ -89,10 +111,23 @@ app.get('/uploads/:filename', (req, res) => {
         res.setHeader('Content-Type', contentType);
         res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
         
-        // Send the file
-        res.sendFile(filePath);
+        // Send the file (must use absolute path)
+        res.sendFile(filePath, (err) => {
+            if (err) {
+                console.error(`[Image Request] Error sending file: ${err.message}`);
+                if (!res.headersSent) {
+                    res.status(500).json({
+                        success: false,
+                        message: 'Error serving image',
+                        error: err.message
+                    });
+                }
+            } else {
+                console.log(`[Image Request] Successfully served: ${filename}`);
+            }
+        });
     } catch (error) {
-        console.error('Error serving image:', error);
+        console.error('[Image Request] Error:', error);
         res.status(500).json({
             success: false,
             message: 'Error serving image',
