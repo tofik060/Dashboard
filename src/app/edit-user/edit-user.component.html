@@ -12,7 +12,7 @@
               <ng-container *ngIf="item.key === 'image'">
                 <img
                   class="profile-avatar"
-                  src="http://localhost:9000/{{ item.value }}"
+                  [src]="getImageUrl(item.value)"
                   alt="image"
                 />
               </ng-container>

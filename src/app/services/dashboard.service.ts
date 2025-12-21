@@ -14,6 +14,12 @@ import { environment } from '../../environments/environment';
 })
 export class DashboardService {
   private REST_API = environment.apiUrl;
+  
+  // Get backend base URL (without /api)
+  getBackendUrl(): string {
+    return environment.apiUrl.replace('/api', '');
+  }
+  
   constructor(
     private http: HttpClient,
     private router: Router,

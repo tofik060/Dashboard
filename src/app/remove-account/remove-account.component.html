@@ -2,7 +2,7 @@
   <form >
     <div *ngFor="let removeUser of removeUser | keyvalue">
         <ng-container *ngIf="removeUser.key === 'image'">
-            <img class="removeImg" src="http://localhost:9000/{{ removeUser.value}}" alt="" />
+            <img class="removeImg" [src]="getImageUrl(removeUser.value)" alt="" />
         </ng-container>
     
     </div>
