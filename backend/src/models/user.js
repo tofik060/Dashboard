@@ -56,7 +56,7 @@ userSchema.methods.generateAuthToken = async function(){
           const expirationDate = new Date(decoded.exp * 1000);
           const now = new Date();
           const hoursUntilExpiry = (decoded.exp * 1000 - now.getTime()) / (1000 * 60 * 60);
-          console.log(`[Token Generation] New token created - expires in: ${hoursUntilExpiry.toFixed(2)} hours (at ${expirationDate.toISOString()})`);
+          //console.log(`[Token Generation] New token created - expires in: ${hoursUntilExpiry.toFixed(2)} hours (at ${expirationDate.toISOString()})`);
         }
         
         this.tokens = this.tokens.concat({token: token}) ;

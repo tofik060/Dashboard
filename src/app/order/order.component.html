@@ -25,7 +25,7 @@
   </div>
 
   <div *ngIf="searchVisible" class="container-fluid my-3">
-    <table class="table text-center custom-table">
+    <table class="table custom-table">
       <tr>
         <th>Order</th>
         <th>Product Code</th>
@@ -68,7 +68,7 @@
           <span class="status-indicator" [ngClass]="getStatusClass(order.orderStatus)"></span>
           {{ order.orderStatus }}
         </td>
-        <td>
+        <td class="text-center">
           <button mat-icon-button class="view-btn" type="button" (click)="customerView(order._id)">
             <mat-icon>visibility</mat-icon>
           </button>

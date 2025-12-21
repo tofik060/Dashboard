@@ -65,25 +65,18 @@ app.get('/uploads/:filename', (req, res) => {
         const filename = req.params.filename;
         const filePath = path.resolve(uploadDir, filename);
         
-        console.log(`[Image Request] Filename: ${filename}`);
-        console.log(`[Image Request] Looking for file at: ${filePath}`);
-        console.log(`[Image Request] Upload directory: ${uploadDir}`);
-        console.log(`[Image Request] Is serverless: ${isServerless}`);
-        console.log(`[Image Request] File exists: ${fs.existsSync(filePath)}`);
-        
         // Check if file exists
         if (!fs.existsSync(filePath)) {
-            console.log(`[Image Request] File not found at: ${filePath}`);
             // List what's actually in the directory for debugging
             try {
                 if (fs.existsSync(uploadDir)) {
                     const files = fs.readdirSync(uploadDir);
-                    console.log(`[Image Request] Files in upload directory: ${files.join(', ')}`);
+                    //console.log(`[Image Request] Files in upload directory: ${files.join(', ')}`);
                 } else {
-                    console.log(`[Image Request] Upload directory does not exist: ${uploadDir}`);
+                    throw new Error('Upload directory does not exist');
                 }
             } catch (dirError) {
-                console.log(`[Image Request] Could not read upload directory: ${dirError.message}`);
+                throw dirError;
             }
             
             return res.status(404).json({
@@ -160,7 +153,11 @@ if (process.env.VERCEL !== '1') {
 }
 
 app.get('/',(req, res) => {
-    res.send(" Invalid endpoint ")
+    if (isDevelopment) {
+        res.send(" Invalid endpoint ")
+    } else {
+        res.send(" Production Server is running...")
+    }
 })
 
 // Export the app for Vercel serverless functions
