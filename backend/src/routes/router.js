@@ -123,10 +123,38 @@ router.post("/registration", upload, async (req, res) => {
       });
     }
   } catch (error) {
-    res.send({
-      message: " Not register ",
-      status: 500,
+    console.error('Registration error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      name: error.name,
+      code: error.code,
+      keyValue: error.keyValue,
+      stack: error.stack
     });
+    
+    // Provide more detailed error messages
+    if (error.code === 11000) {
+      // Duplicate key error (email or phone already exists)
+      const field = Object.keys(error.keyValue)[0];
+      res.status(400).send({
+        message: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`,
+        status: 400,
+        error: error.message
+      });
+    } else if (error.name === 'ValidationError') {
+      // Mongoose validation error
+      res.status(400).send({
+        message: "Validation Error: " + Object.values(error.errors).map(e => e.message).join(', '),
+        status: 400,
+        error: error.message
+      });
+    } else {
+      res.status(500).send({
+        message: "Registration failed: " + (error.message || "Unknown error"),
+        status: 500,
+        error: error.message
+      });
+    }
   }
 });
 
