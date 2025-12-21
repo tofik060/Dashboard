@@ -7,10 +7,18 @@
       <div class="row px-2 py-2">
         <div class="col-12 col-md-4 text-center mb-3 mb-md-0" style="padding-top: 24px">
           <img
-            [src]="user && user.image ? getImageUrl(user.image) : 'assets/profile.jpg'"
+            *ngIf="hasUserImage()"
+            [src]="getImageUrl(user.image)"
             alt="Profile Picture"
             class="profile-avatar"
           />
+          <div
+            *ngIf="!hasUserImage()"
+            class="profile-avatar user-initials-avatar"
+            style="display: flex; align-items: center; justify-content: center; background-color: #4caf50; color: white; font-weight: bold; font-size: 48px; margin: 0 auto;"
+          >
+            {{ getUserInitials() }}
+          </div>
         </div>
         <div class="col-12 col-md-8">
           <table>
