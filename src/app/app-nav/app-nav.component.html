@@ -79,7 +79,7 @@
         </div>
         <div class="row mr-2 ml-auto">
           <ol>
-            <li>
+            <li *ngIf="isLoggedIn">
               <button
                 mat-button
                 [matMenuTriggerFor]="menu"
