@@ -105,7 +105,7 @@ router.post("/registration", upload, async (req, res) => {
         email: req.body.email,
         password: password,
         confirmPassword: confirmPassword,
-        phone: req.body.phone,
+        phone: req.body.phone ? parseInt(req.body.phone) : undefined,
         location: req.body.location,
         image: imagePath,
       });
