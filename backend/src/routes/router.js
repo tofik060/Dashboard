@@ -4,7 +4,6 @@ const auth = require("../middleware/auth");
 const sendEmail = require("../middleware/email");
 const Cancel = require("../models/model");
 const User = require("../models/user");
-const UploadDoc = require("../models/uploadDoc");
 const OderList = require("../models/orderList");
 const OrderList = require("../models/orderList");
 const Product = require("../models/product");
@@ -112,29 +111,6 @@ router.post("/registration", upload, async (req, res) => {
       });
 
       const regUser = await regUserData.save();
-
-      // Also save email and image to UploadDoc
-      try {
-        const uploadDocData = new UploadDoc({
-          email: req.body.email,
-          image: imagePath,
-        });
-        await uploadDocData.save();
-        console.log(`[UploadDoc] Created uploadDoc for email: ${req.body.email}`);
-      } catch (uploadDocError) {
-        // If uploadDoc already exists, update it instead
-        if (uploadDocError.code === 11000) {
-          await UploadDoc.findOneAndUpdate(
-            { email: req.body.email },
-            { image: imagePath, updatedAt: Date.now() },
-            { upsert: true }
-          );
-          console.log(`[UploadDoc] Updated uploadDoc for email: ${req.body.email}`);
-        } else {
-          console.error('[UploadDoc] Error saving uploadDoc:', uploadDocError);
-          // Don't fail registration if uploadDoc save fails
-        }
-      }
 
       res.send({
         message: "Successfully Register!",
@@ -390,116 +366,45 @@ router.get("/profile/:id", (req, res) => {
 
 /******************************** Update Profile ******************************** */
 
-router.post("/update/:id", upload, async (req, res) => {
-  try {
-    const _id = req.params.id;
-    let new_image = "";
-    
-    if (req.file) {
-      // Delete old image if it exists
-      const user = await User.findById(_id);
-      if (user && user.image) {
-        try {
-          const oldImagePath = path.join(__dirname, '..', user.image);
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
+router.post("/update/:id", upload, (req, res) => {
+  const _id = req.params.id;
+  let new_image = "";
+  if (req.file) {
+    // Delete old image if it exists
+    User.findById(_id)
+      .then((user) => {
+        if (user && user.image) {
+          try {
+            const oldImagePath = path.join(__dirname, '..', user.image);
+            if (fs.existsSync(oldImagePath)) {
+              fs.unlinkSync(oldImagePath);
+            }
+          } catch (error) {
           }
-        } catch (error) {
-          console.error('Error deleting old image:', error);
         }
-      }
-      
-      new_image = path.join('uploads', req.file.filename);
-    } else {
-      new_image = req.body.image;
-    }
-    
-    const userData = {
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      location: req.body.location,
-      image: new_image,
-    };
-    
-    const updatedUser = await User.findByIdAndUpdate(_id, userData, { new: true });
-    
-    // Also update UploadDoc with email and image
-    if (req.body.email) {
-      try {
-        await UploadDoc.findOneAndUpdate(
-          { email: req.body.email },
-          { 
-            email: req.body.email,
-            image: new_image,
-            updatedAt: Date.now()
-          },
-          { upsert: true, new: true }
-        );
-        console.log(`[UploadDoc] Updated uploadDoc for email: ${req.body.email}`);
-      } catch (uploadDocError) {
-        console.error('[UploadDoc] Error updating uploadDoc:', uploadDocError);
-        // Don't fail profile update if uploadDoc update fails
-      }
-    }
-    
-    res.json(updatedUser);
-  } catch (error) {
-    console.error('Error updating profile:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error updating profile',
-      error: error.message
-    });
-  }
-});
-
-/************************* UploadDoc API ********************************************* */
-
-// GET uploadDoc by email (for navbar and profile)
-router.get("/uploadDoc/:email", async (req, res) => {
-  try {
-    const email = req.params.email;
-    const uploadDoc = await UploadDoc.findOne({ email: email });
-    
-    if (!uploadDoc) {
-      return res.status(404).json({
-        success: false,
-        message: 'Upload document not found for this email',
-        email: email
+      })
+      .catch((error) => {
+        throw error;
       });
-    }
     
-    res.json({
-      success: true,
-      data: uploadDoc
-    });
-  } catch (error) {
-    console.error('Error fetching uploadDoc:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching upload document',
-      error: error.message
-    });
+    new_image = path.join('uploads', req.file.filename);
+  } else {
+    new_image = req.body.image;
   }
-});
-
-// GET all uploadDocs (optional, for admin)
-router.get("/uploadDoc", async (req, res) => {
-  try {
-    const uploadDocs = await UploadDoc.find();
-    res.json({
-      success: true,
-      data: uploadDocs
+  const userData = {
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    location: req.body.location,
+    image: new_image,
+  };
+  User.findByIdAndUpdate(_id, userData, { new: true })
+    .then((UserData) => {
+      res.json(UserData);
+    })
+    .catch((error) => {
+      throw error;
     });
-  } catch (error) {
-    console.error('Error fetching uploadDocs:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching upload documents',
-      error: error.message
-    });
-  }
 });
 
 /******************** Delete User ************************************** */

@@ -59,10 +59,6 @@ export class AppNavComponent implements OnInit, OnDestroy {
     const currentUser = this.dashboardService.userData.value;
     if (currentUser && currentUser._id && currentUser._id !== '') {
       this.user = currentUser;
-      // Try to fetch image from uploadDoc
-      if (currentUser.email) {
-        this.fetchUserImage(currentUser.email);
-      }
       this.isLoading = false;
       return;
     }
@@ -86,32 +82,11 @@ export class AppNavComponent implements OnInit, OnDestroy {
       // Check if we have valid user data (not empty/default)
       if (res && res._id && res._id !== '') {
         this.user = res;
-        // Try to fetch image from uploadDoc
-        if (res.email) {
-          this.fetchUserImage(res.email);
-        }
         this.isLoading = false;
         // Clear timeout since data has arrived
         if (this.dataTimeout) {
           clearTimeout(this.dataTimeout);
         }
-      }
-    });
-  }
-
-  fetchUserImage(email: string): void {
-    this.dashboardService.getUploadDocByEmail(email).subscribe({
-      next: (response: any) => {
-        if (response.success && response.data && response.data.image) {
-          // Update user image from uploadDoc
-          if (this.user) {
-            this.user.image = response.data.image;
-          }
-        }
-      },
-      error: (error) => {
-        // Silently fail - use existing image or default
-        console.log('Could not fetch image from uploadDoc:', error);
       }
     });
   }

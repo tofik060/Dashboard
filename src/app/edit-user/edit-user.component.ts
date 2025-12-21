@@ -39,27 +39,6 @@ export class EditUserComponent implements OnInit {
     this.dashboardService.profile(this.id).subscribe((response) => {
       this.userForm.patchValue(response);
       this.items = response;
-      // Try to fetch image from uploadDoc
-      if (response && response.email) {
-        this.fetchUserImage(response.email);
-      }
-    });
-  }
-
-  fetchUserImage(email: string): void {
-    this.dashboardService.getUploadDocByEmail(email).subscribe({
-      next: (response: any) => {
-        if (response.success && response.data && response.data.image) {
-          // Update items image from uploadDoc
-          if (this.items) {
-            this.items.image = response.data.image;
-          }
-        }
-      },
-      error: (error) => {
-        // Silently fail - use existing image or default
-        console.log('Could not fetch image from uploadDoc:', error);
-      }
     });
   }
 
