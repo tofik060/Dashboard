@@ -6,6 +6,7 @@ import { MatMenuPanel } from '@angular/material/menu';
 import { user } from '../users/user';
 import { DashboardService } from '../services/dashboard.service';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 
 
@@ -127,6 +128,16 @@ export class AppNavComponent implements OnInit, OnDestroy {
   }
 
   hasUserImage(): boolean {
-    return !!(this.user && this.user.image && typeof this.user.image === 'string' && this.user.image.trim() !== '');
+    // In production, prefer initials over images (images may not load due to serverless limitations)
+    // Only return true if user has a valid image path
+    const hasImage = !!(this.user && this.user.image && typeof this.user.image === 'string' && this.user.image.trim() !== '');
+    
+    // In production, be more strict - only show image if path is explicitly set
+    // This ensures initials show when images fail to load (404 errors)
+    if (environment.production) {
+      return hasImage && this.user.image.startsWith('uploads/');
+    }
+    
+    return hasImage;
   }
 }
