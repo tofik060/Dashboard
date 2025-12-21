@@ -1,12 +1,37 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/e-mart-dashboard-application",
-  "rewrites": [
+  "installCommand": "npm install",
+  "framework": null,
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/e-mart-dashboard-application"
+      }
+    },
+    {
+      "src": "backend/src/index.js",
+      "use": "@vercel/node"
     }
-  ]
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/src/index.js"
+    },
+    {
+      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
 
