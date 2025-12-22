@@ -1,14 +1,6 @@
 <div class="d-flex justify-content-center responsive-container">
   <div class="container-fluid col-12 col-md-10 col-lg-8 col-xl-6">
-    <!-- Loader -->
-    <div *ngIf="isLoading" class="loader-container">
-      <mat-spinner diameter="50"></mat-spinner>
-      <p>Loading profile data...</p>
-    </div>
-    
-    <!-- Edit Form -->
     <form
-      *ngIf="!isLoading"
       [formGroup]="userForm"
       (ngSubmit)="onUpdate()"
       enctype="multipart/form-data"

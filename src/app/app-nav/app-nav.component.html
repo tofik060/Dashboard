@@ -132,12 +132,6 @@
     </mat-toolbar>
     <mat-divider></mat-divider>
     <!-- Add Content Here -->
-    <div *ngIf="isLoading" class="loader-container">
-      <mat-spinner diameter="50"></mat-spinner>
-      <p>Loading...</p>
-    </div>
-    <div *ngIf="!isLoading">
-      <router-outlet></router-outlet>
-    </div>
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

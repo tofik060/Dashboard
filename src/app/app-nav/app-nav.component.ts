@@ -35,9 +35,7 @@ export class AppNavComponent implements OnInit, OnDestroy {
 
   userForm : any =[]
   user: any;
-  isLoading: boolean = true;
   isPinned: boolean = false;
-  private dataTimeout: any;
   private subscription: any;
   
   constructor(
@@ -57,22 +55,7 @@ export class AppNavComponent implements OnInit, OnDestroy {
     const currentUser = this.dashboardService.userData.value;
     if (currentUser && currentUser._id && currentUser._id !== '') {
       this.user = currentUser;
-      this.isLoading = false;
       return;
-    }
-
-    // Only show loader and set timeout if there's a token (user should be logged in)
-    if (token) {
-      // Set timeout to refresh page if data doesn't come within 2 seconds
-      this.dataTimeout = setTimeout(() => {
-        if (this.isLoading) {
-          // Data hasn't loaded within 2 seconds, refresh the page
-          window.location.reload();
-        }
-      }, 2000);
-    } else {
-      // No token, no need to wait for user data
-      this.isLoading = false;
     }
 
     // Subscribe to user data
@@ -80,19 +63,11 @@ export class AppNavComponent implements OnInit, OnDestroy {
       // Check if we have valid user data (not empty/default)
       if (res && res._id && res._id !== '') {
         this.user = res;
-        this.isLoading = false;
-        // Clear timeout since data has arrived
-        if (this.dataTimeout) {
-          clearTimeout(this.dataTimeout);
-        }
       }
     });
   }
 
   ngOnDestroy(): void {
-    if (this.dataTimeout) {
-      clearTimeout(this.dataTimeout);
-    }
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
