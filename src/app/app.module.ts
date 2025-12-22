@@ -47,6 +47,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RequestInterceptor } from './request.interceptor';
 import { ErrorInterceptor } from './error.interceptor';
+import { LoadingInterceptor } from './loading.interceptor';
+import { GlobalLoaderComponent } from './components/global-loader.component';
 import { LogoutComponent } from './logout/logout.component';
 import { SearchComponent } from './search/search.component';
 import { RemoveAccountComponent } from './remove-account/remove-account.component';
@@ -84,6 +86,7 @@ import { NgChartsModule } from 'ng2-charts';
     ForgetPasswordComponent,
     ChangePasswordComponent,
     ResetPasswordComponent,
+    GlobalLoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -121,6 +124,11 @@ import { NgChartsModule } from 'ng2-charts';
   {
     provide: HTTP_INTERCEPTORS,
     useClass: ErrorInterceptor,
+    multi: true
+  },
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: LoadingInterceptor,
     multi: true
   },
   CookieService
